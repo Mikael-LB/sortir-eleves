@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -70,6 +72,16 @@ class Sortie
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AssosPartiSort::class, mappedBy="sortie")
+     */
+    private $assosPartiSort;
+
+    public function __construct()
+    {
+        $this->assosPartiSort = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -192,6 +204,36 @@ class Sortie
     public function setLieu(?Lieu $lieu): self
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AssosPartiSort[]
+     */
+    public function getAssosPartiSort(): Collection
+    {
+        return $this->assosPartiSort;
+    }
+
+    public function addAssosPartiSort(AssosPartiSort $assosPartiSort): self
+    {
+        if (!$this->assosPartiSort->contains($assosPartiSort)) {
+            $this->assosPartiSort[] = $assosPartiSort;
+            $assosPartiSort->setSortie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssosPartiSort(AssosPartiSort $assosPartiSort): self
+    {
+        if ($this->assosPartiSort->removeElement($assosPartiSort)) {
+            // set the owning side to null (unless already changed)
+            if ($assosPartiSort->getSortie() === $this) {
+                $assosPartiSort->setSortie(null);
+            }
+        }
 
         return $this;
     }

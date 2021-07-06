@@ -82,9 +82,15 @@ class Participant implements UserInterface
      */
     private $campus;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AssosPartiSort::class, mappedBy="participant")
+     */
+    private $assosPartiSort;
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
+        $this->assosPartiSort = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -290,6 +296,36 @@ class Participant implements UserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AssosPartiSort[]
+     */
+    public function getAssosPartiSort(): Collection
+    {
+        return $this->assosPartiSort;
+    }
+
+    public function addAssosPartiSort(AssosPartiSort $assosPartiSort): self
+    {
+        if (!$this->assosPartiSort->contains($assosPartiSort)) {
+            $this->assosPartiSort[] = $assosPartiSort;
+            $assosPartiSort->setParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssosPartiSort(AssosPartiSort $assosPartiSort): self
+    {
+        if ($this->assosPartiSort->removeElement($assosPartiSort)) {
+            // set the owning side to null (unless already changed)
+            if ($assosPartiSort->getParticipant() === $this) {
+                $assosPartiSort->setParticipant(null);
+            }
+        }
 
         return $this;
     }
