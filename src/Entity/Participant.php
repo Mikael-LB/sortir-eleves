@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -68,6 +70,27 @@ class Participant implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $urlImage;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participant")
+     */
+    private $sorties;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=AssosPartiSort::class, inversedBy="participants")
+     */
+    private $assosPartSort;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    public function __construct()
+    {
+        $this->sorties = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -230,6 +253,60 @@ class Participant implements UserInterface
     public function setUrlImage(?string $urlImage): self
     {
         $this->urlImage = $urlImage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sortie $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties[] = $sorty;
+            $sorty->setParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sortie $sorty): self
+    {
+        if ($this->sorties->removeElement($sorty)) {
+            // set the owning side to null (unless already changed)
+            if ($sorty->getParticipant() === $this) {
+                $sorty->setParticipant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAssosPartSort(): ?AssosPartiSort
+    {
+        return $this->assosPartSort;
+    }
+
+    public function setAssosPartSort(?AssosPartiSort $assosPartSort): self
+    {
+        $this->assosPartSort = $assosPartSort;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }

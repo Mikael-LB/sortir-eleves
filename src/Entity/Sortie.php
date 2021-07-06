@@ -47,6 +47,12 @@ class Sortie
      */
     private $infosSortie;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $participant;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,18 @@ class Sortie
     public function setInfosSortie(string $infosSortie): self
     {
         $this->infosSortie = $infosSortie;
+
+        return $this;
+    }
+
+    public function getParticipant(): ?Participant
+    {
+        return $this->participant;
+    }
+
+    public function setParticipant(?Participant $participant): self
+    {
+        $this->participant = $participant;
 
         return $this;
     }
