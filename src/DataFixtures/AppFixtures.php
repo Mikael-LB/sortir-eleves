@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Campus;
 use App\Entity\Etat;
+use App\Entity\Lieu;
 use App\Entity\Participant;
+use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Repository\AssosPartiSortRepository;
 use App\Repository\CampusRepository;
@@ -123,6 +125,29 @@ class AppFixtures extends Fixture
         //On récupère les états
         $etatList = $this->etatRepository->findAll();
         $nbEtat =count($etatList);
+
+        //Création des lieux
+        for ($i=0; $i<$nbVilles; $i++)
+        {
+
+                $nomVille = $villeList[$i]->getNom();
+            for ($j=0; $j<3; $j++)
+            {
+                $lieu = new Lieu();
+                $lieu->setNom($generator->company . ' près de ' . $nomVille)
+                    ->setRue($generator->streetName)
+                    ->setLatitude($generator->latitude)
+                    ->setLongitude($generator->longitude)
+                    ->setVille($villeList[$i]);
+
+                $manager->persist($lieu);
+            }
+        }
+            $manager->flush();
+
+        $lieuList = $this->lieuRepository->findAll();
+        $nbLieu = count($lieuList);
+
 
 
         $manager->flush();
