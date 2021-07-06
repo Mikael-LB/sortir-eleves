@@ -77,11 +77,6 @@ class Participant implements UserInterface
     private $sorties;
 
     /**
-     * @ORM\ManyToOne(targetEntity=AssosPartiSort::class, inversedBy="participants")
-     */
-    private $assosPartSort;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -283,18 +278,6 @@ class Participant implements UserInterface
                 $sorty->setParticipant(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getAssosPartSort(): ?AssosPartiSort
-    {
-        return $this->assosPartSort;
-    }
-
-    public function setAssosPartSort(?AssosPartiSort $assosPartSort): self
-    {
-        $this->assosPartSort = $assosPartSort;
 
         return $this;
     }
