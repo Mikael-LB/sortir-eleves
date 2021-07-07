@@ -11,8 +11,7 @@ class AccueilController extends AbstractController
     #[Route('/', name: 'accueil_accueil')]
     public function accueil(): Response
     {
-        return $this->render('security/login.html.twig', [
-        ]);
+        return $this->redirectToRoute('sortie_liste_sorties');
     }
 
 }
