@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <h1>Liste des sorties</h1>
+        <section>
+            <span>Date du jour : {{ "now" | date('d/m/Y') }}</span>
+            <span>{{ app.user.nom }} {{ app.user.prenom }}</span>
+        </section>
+        <section>
+            <h2>Filtrer les sorties</h2>
+            {# todo form #}
+        </section>
+        <section>
+            <h2>Résultat du filtre</h2>
+            <table id="table-sorties">
+                <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Clôture</th>
+                    <th>inscrits / places</th>
+                    <th>Etat</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sortie in sorties %}
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut | date('d/M/Y h:m') }}</td>
+                        <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
+                        <td>{# todo number of inscrits #} / {{ sortie.nbInscriptionsMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>X</td>
+                        <td>{{ sortie.participant.pseudo }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <p>
+                <button class="button-blue"><a href="" class="a-text-white">Créer une sortie</a></button>
+            </p>
+        </section>
+    </div>
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | liste des sorties
+{% endblock %}
+
