@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\AssosPartiSort;
 use App\Entity\Campus;
 use App\Entity\Etat;
 use App\Entity\Lieu;
@@ -144,9 +145,30 @@ class AppFixtures extends Fixture
             }
         }
             $manager->flush();
-
+        //On récupère les lieux
         $lieuList = $this->lieuRepository->findAll();
         $nbLieu = count($lieuList);
+//
+//        // Créaiton des Sortie avec AssosPartiSort
+//
+//        for ($i=0; $i< 100; $i++){
+//
+//            $sortie = new Sortie();
+//            $nbMaxParticipant = $generator->numberBetween(2, 20);
+//            $sortie->setNbInscriptionsMax()
+//                ->setNom($generator->realText(155, 2))
+//                ->setDuree($generator->time)
+//            ;
+//
+//
+//            $assosPartiSort = new AssosPartiSort();
+//
+//
+//            $manager->persist($assosPartiSort);
+//
+//            $manager->persist($sortie);
+//        }
+//        $manager->flush();
 
 
 
