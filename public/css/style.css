@@ -1,0 +1,58 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height:100vh;
+}
+main {
+    background: #F5F5F5;
+    min-height: 500px;
+    padding:1em;
+    margin:0;
+}
+
+#nav-logo {
+    height:100px;
+    padding:1em;
+}
+.flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.nodisc {
+    list-style-type: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.li-footer {
+    padding-top:0.25em;
+}
+
+.navbar{
+    padding-right: 5px;
+}
+
+.button{
+    text-decoration: none;
+    color:black;
+}
+
+.padding1em {
+    padding:1em;
+}
+
+.padding2em {
+    padding:2em;
+}
+
+#footer {
+    text-align:center;
+    margin-bottom: 20px;
+}
