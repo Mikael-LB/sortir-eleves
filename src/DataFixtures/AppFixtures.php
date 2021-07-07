@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
     protected $NOM_CAMPUS = ['Rennes','Quimper','Niort','Nantes'];
-    protected $NOM_ETAT = ['En Création','Ouverte','Fermée','En Cours', 'Terminée', 'Annulée','Historisée'];
+    protected $NOM_ETAT = ['En Création','Ouverte','Clôturée','En Cours', 'Terminée', 'Annulée','Historisée'];
     protected $campusRepository;
     protected $villeRepository;
     protected $lieuRepository;
@@ -149,137 +149,170 @@ class AppFixtures extends Fixture
         $lieuList = $this->lieuRepository->findAll();
         $nbLieu = count($lieuList);
 
-        // Créaiton des Sortie avec AssosPartiSort
-//
-//        for ($i=0; $i< 100; $i++){
-//
-//            $sortie = new Sortie();
-//            $nbMaxParticipant = $generator->numberBetween(2, 20);
-//            $dateHeureDebut = $generator->dateTimeBetween('-2 months','+2 months');
-//            $dateLimiteInscription = new \DateTime(($dateHeureDebut->format('Y-m-d H:i:s')));
-//            date_sub($dateLimiteInscription, date_interval_create_from_date_string('2 days'));
-//            $duree = $generator->time('H:i:s');
-//            $dateHeureFin = new \DateTime($dateHeureDebut);
-//            date_add($dateHeureFin, 'minutes');
-//
-//
-//
-////            $dateLimiteInscriptionformatee = date_format($dateLimiteInscription, "d/m/Y");
-//
-//            $organisateur = $participantList[$generator->numberBetween(0,$nbParticipantTotal)];
-//            $sortie->setNbInscriptionsMax($nbMaxParticipant)
-//                ->setNom($generator->realText(155, 2))
-//                ->setDuree($duree)
-//                ->setInfosSortie($generator->realText(300,2))
-//                ->setDateHeureDebut($dateHeureDebut)
-//                ->setDateLimiteInscription($dateLimiteInscription)
-//                ->setNbInscriptionsMax($nbMaxParticipant)
-//                ->setParticipant($organisateur)
-//                ->setCampus($organisateur->getCampus())
-//                ->setLieu($lieuList[$generator->numberBetween(0, $nbLieu)])
-//            ;
-//            // On ajoute sa sotrie à l'organisateur
-//            $organisateur->addSorty($sortie);
-//            $manager->persist($organisateur);
-//            // on remplie une sortie avec le nombre max de participant
-//            if ($generator->boolean(60)){
-//                for ($j=0; $j<$nbMaxParticipant; $j++){
-//                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal)];
-//                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
-//                    // aux participants de la sortie
-//                    if($participant == $organisateur){
-//                        $j--;
-//                    // Sinon on peut l'ajouter à la sortie
-//                    }else{
-//                        $assosPartiSort = new AssosPartiSort();
-//                        $assosPartiSort->setSortie($sortie)
-//                            ->setParticipant($participant)
-//                            ;
-//                        $sortie->addAssosPartiSort($assosPartiSort);
-//                        $participant->addAssosPartiSort($assosPartiSort);
-//                        $manager->persist($participant);
-//                        $manager->persist($assosPartiSort);
-//                    }
-//                }
-//            }
-//            // on ne remplie PAS totalement la sortie de participants
-//            elseif ($generator->boolean(50)){
-//                for ($j=0; $j<($nbMaxParticipant-1); $j++){
-//                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal)];
-//                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
-//                    // aux participants de la sortie
-//                    if($participant == $organisateur){
-//                        $j--;
-//                        // Sinon on peut l'ajouter à la sortie
-//                    }else{
-//                        $assosPartiSort = new AssosPartiSort();
-//                        $assosPartiSort->setSortie($sortie)
-//                            ->setParticipant($participant)
-//                        ;
-//                        $sortie->addAssosPartiSort($assosPartiSort);
-//                        $participant->addAssosPartiSort($assosPartiSort);
-//                        $manager->persist($participant);
-//                        $manager->persist($assosPartiSort);
-//                    }
-//                }
-//            }
-//            // On annule la sortie
-//            else{
-//                for ($j=0; $j<($nbMaxParticipant-1); $j++){
-//                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal)];
-//                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
-//                    // aux participants de la sortie
-//                    if($participant == $organisateur){
-//                        $j--;
-//                        // Sinon on peut l'ajouter à la sortie
-//                    }else{
-//                        $assosPartiSort = new AssosPartiSort();
-//                        $assosPartiSort->setSortie($sortie)
-//                            ->setParticipant($participant)
-//                        ;
-//                        $sortie->addAssosPartiSort($assosPartiSort);
-//                        $participant->addAssosPartiSort($assosPartiSort);
-//                        $manager->persist($participant);
-//                        $manager->persist($assosPartiSort);
-//                        $sortie->setEtat($this->etatRepository->findOneByLibelle(['Annulée']));
-//                    }
-//                }
-//            }
-//            // selection des Etats correspondant à la sortie (sauf annulée)
-//
-//            if ($sortie->getEtat() !== $this->etatRepository->findOneByLibelle(['Annulée'])){
-//
-//                // selection Ouverte || Fermée
-//                if($dateLimiteInscription < new \DateTime('now')){
-//                    $nbParticipantInscris = count($sortie->getAssosPartiSort());
-//
-//                    if ($nbParticipantInscris == $nbMaxParticipant){
-//                        $sortie->setEtat($this->etatRepository->findOneByLibelle(['Fermée']));
-//                    }else{
-//                        $sortie->setEtat($this->etatRepository->findOneByLibelle(['Ouverte']));
-//                    }
-//                }
-//
-//                // selection En cours
-//                if( ($dateHeureDebut < new \DateTime('now')) && ( date_add($dateHeureDebut, ) ) ){
-//
-//                }
-//
-//            }
-//
-//
-//
-//
-//    //protected $NOM_ETAT = ['En Création','Ouverte','Fermée','En Cours', 'Terminée', 'Annulée','Historisée'];
-//
-//
-//
-//            $manager->persist($sortie);
-//        }
-//        $manager->flush();
+        $nowDate = new \DateTime('now');
+        // On récupère tout les états qui vont nous etre utiles
+        // à differents moments de la création de sorties
+        $etatAnnulee = $this->etatRepository->findOneByLibelle(['Annulée']);
+        $etatHistorisee = $this->etatRepository->findOneByLibelle(['Historisée']);
+        $etatCloturee = $this->etatRepository->findOneByLibelle(['Clôturée']);
+        $etatTerminee = $this->etatRepository->findOneByLibelle(['Terminée']);
+        $etatOuverte = $this->etatRepository->findOneByLibelle(['Ouverte']);
+        $etatEnCours = $this->etatRepository->findOneByLibelle(['En Cours']);
+
+        // Création des Sortie avec AssosPartiSort
+        // et le référencement des lieux et états
+        for ($i=0; $i< 100; $i++){
+
+            $sortie = new Sortie();
+            $nbMaxParticipant = $generator->numberBetween(2, 20);
+            $dateHeureDebut = $generator->dateTimeBetween('-2 months','+2 months');
+            $dateLimiteInscription = new \DateTime($dateHeureDebut->format('Y-m-d H:i:s'));
+            date_sub($dateLimiteInscription, date_interval_create_from_date_string('2 days'));
+            $duree = $generator->numberBetween(30, 10080);
+            $dateHeureFin = new \DateTime($dateHeureDebut->format('Y-m-d H:i:s'));
+            date_modify($dateHeureFin, '+'.$duree.' minutes');
+            $dateHistorisation = new \DateTime($dateHeureFin->format('Y-m-d H:i:s'));
+            date_modify($dateHistorisation, '+1 months');
+
+            $organisateur = $participantList[$generator->numberBetween(0,$nbParticipantTotal-1)];
+            $lieuSelectionnee = $lieuList[$generator->numberBetween(0, $nbLieu-1)];
+            $sortie->setNbInscriptionsMax($nbMaxParticipant)
+                ->setNom($generator->realText(155, 2))
+                ->setDuree($duree)
+                ->setInfosSortie($generator->realText(300,2))
+                ->setDateHeureDebut($dateHeureDebut)
+                ->setDateLimiteInscription($dateLimiteInscription)
+                ->setNbInscriptionsMax($nbMaxParticipant)
+                ->setParticipant($organisateur)
+                ->setCampus($organisateur->getCampus())
+                ->setLieu($lieuSelectionnee)
+            ;
+            // On ajoute sa sortie à l'organisateur ET le lieu
+            $organisateur->addSorty($sortie);
+            $lieuSelectionnee->addSorty($sortie);
+
+            $manager->persist($organisateur);
+            $manager->persist($lieuSelectionnee);
 
 
 
+
+
+            // on remplie une sortie avec le nombre max de participant
+            if ($generator->boolean(60)){
+                for ($j=0; $j<$nbMaxParticipant; $j++){
+                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal-1)];
+                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
+                    // aux participants de la sortie
+                    if($participant === $organisateur){
+                        $j--;
+                    // Sinon on peut l'ajouter à la sortie
+                    }else{
+                        $assosPartiSort = new AssosPartiSort();
+                        $assosPartiSort->setSortie($sortie)
+                            ->setParticipant($participant)
+                            ;
+                        $sortie->addAssosPartiSort($assosPartiSort);
+                        $participant->addAssosPartiSort($assosPartiSort);
+                        $manager->persist($participant);
+                        $manager->persist($assosPartiSort);
+                    }
+                }
+            }
+            // on ne remplie PAS totalement la sortie de participants
+            elseif ($generator->boolean(50)){
+                for ($j=0; $j<($nbMaxParticipant-1); $j++){
+                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal-1)];
+                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
+                    // aux participants de la sortie
+                    if($participant === $organisateur){
+                        $j--;
+                        // Sinon on peut l'ajouter à la sortie
+                    }else{
+                        $assosPartiSort = new AssosPartiSort();
+                        $assosPartiSort->setSortie($sortie)
+                            ->setParticipant($participant)
+                        ;
+                        $sortie->addAssosPartiSort($assosPartiSort);
+                        $participant->addAssosPartiSort($assosPartiSort);
+                        $manager->persist($participant);
+                        $manager->persist($assosPartiSort);
+                    }
+                }
+            }
+            // On annule la sortie
+            else{
+                for ($j=0; $j<($nbMaxParticipant-1); $j++){
+                    $participant = $participantList[$generator->numberBetween(0,$nbParticipantTotal-1)];
+                    // Si le participant choisi aléatoirement est l'organisateur on ne l'ajoute PAS
+                    // aux participants de la sortie
+                    if($participant === $organisateur){
+                        $j--;
+                        // Sinon on peut l'ajouter à la sortie
+                    }else{
+                        $assosPartiSort = new AssosPartiSort();
+                        $assosPartiSort->setSortie($sortie)
+                            ->setParticipant($participant)
+                        ;
+                        $sortie->addAssosPartiSort($assosPartiSort);
+                        $participant->addAssosPartiSort($assosPartiSort);
+                        $manager->persist($participant);
+                        $manager->persist($assosPartiSort);
+                        $sortie->setEtat($etatAnnulee);
+
+                        $etatAnnulee->addSorty($sortie);
+                    }
+                }
+            }
+            // On historise toutes les sorties annulée ou finies depuis plus d'un mois
+            if ($dateHistorisation > $nowDate){
+                $sortie->setEtat($etatHistorisee);
+                $etatHistorisee->addSorty($sortie);
+            }
+            // selection des Etats correspondant à la sortie (sauf annulée)
+            elseif ($sortie->getEtat() !== $etatAnnulee){
+
+                // selection Ouverte || Clôturée
+                if($dateLimiteInscription < $nowDate){
+                    $nbParticipantInscris = count($sortie->getAssosPartiSort());
+
+                    if ($nbParticipantInscris == $nbMaxParticipant){
+                        $sortie->setEtat($etatCloturee);
+                        $etatCloturee->addSorty($sortie);
+
+                    }else{
+                        $sortie->setEtat($etatOuverte);
+                        $etatOuverte->addSorty($sortie);
+
+                    }
+                }
+                // Selection Clôturée
+                elseif( ($dateLimiteInscription > $nowDate) && ($dateHeureDebut > $nowDate) ) {
+                    $sortie->setEtat($etatCloturee);
+                    $etatCloturee->addSorty($sortie);
+
+                }
+                // selection En cours
+                elseif( ($dateHeureDebut > $nowDate) && ( $dateHeureFin < $nowDate ) ){
+                    $sortie->setEtat($etatEnCours);
+                    $etatEnCours->addSorty($sortie);
+
+                }
+                elseif ( $dateHeureFin > $nowDate ){
+                    $sortie->setEtat($etatTerminee);
+                    $etatTerminee->addSorty($sortie);
+                }
+            }
+            // On fait persister notre sortie
+            $manager->persist($sortie);
+        }
+            // On oublie pas de faire persister les Etats avec les ajout de sorties
+        $manager->persist($etatAnnulee);
+        $manager->persist($etatHistorisee);
+        $manager->persist($etatCloturee);
+        $manager->persist($etatTerminee);
+        $manager->persist($etatOuverte);
+        $manager->persist($etatEnCours);
         $manager->flush();
     }
 }
