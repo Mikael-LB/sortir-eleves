@@ -51,4 +51,11 @@ class SortieController extends AbstractController
             'sorties' => $sorties,
         ]);
     }
+
+    #[Route('/sorties/creer', name: 'sortie_creer')]
+    public function creerSortie(){
+
+
+    }
+
 }
