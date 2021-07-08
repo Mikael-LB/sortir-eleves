@@ -26,12 +26,13 @@ class SortieRepository extends ServiceEntityRepository
 
         $idCampus = $filtrer->getCampus()->getId();
         $nom = $filtrer->getNom();
+        dump($nom);
 
         $queryBuilder = $this->createQueryBuilder('sortie');
         //$queryBuilder->andWhere('sortie.nbInscriptionsMax < 4');
-        //$queryBuilder->andWhere('sortie.campus = :idcampus')->setParameter('idcampus',$idCampus);
-        if ($nom){
-            $queryBuilder->andWhere("sortie.nom LIKE '%:pnom%'")->setParameter('pnom',$nom);
+        $queryBuilder->andWhere('sortie.campus = :idcampus')->setParameter('idcampus',$idCampus);
+        if (!empty($nom)){
+            $queryBuilder->andWhere("sortie.nom LIKE :pnom")->setParameter('pnom','%'.$nom.'%');
         }
 
         $query = $queryBuilder->getQuery();
