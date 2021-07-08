@@ -184,7 +184,7 @@ class AppFixtures extends Fixture
                 ->setDateHeureDebut($dateHeureDebut)
                 ->setDateLimiteInscription($dateLimiteInscription)
                 ->setNbInscriptionsMax($nbMaxParticipant)
-                ->setParticipant($organisateur)
+                ->setOrganisateur($organisateur)
                 ->setCampus($organisateur->getCampus())
                 ->setLieu($lieuSelectionnee)
             ;
