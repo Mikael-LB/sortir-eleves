@@ -31,7 +31,7 @@ class SortieController extends AbstractController
             ->setDateLimiteInscription(new \DateTime('now + 2 day'))
             ->setNbInscriptionsMax(8)
             ->setEtat($etatRepository->find(1))
-            ->setParticipant($participantRepository->find(1));
+            ->setOrganisateur($participantRepository->find(1));
         $sorties = [$sortie];*/
         $sorties = $sortieRepository->findAll();
 

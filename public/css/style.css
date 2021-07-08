@@ -57,6 +57,7 @@ main {
     background: linear-gradient(127deg,#4b67f6,#3ca6fc);
     border:2px inset #3ca6fc;
     padding:12px 24px;
+    color:white;
 }
 
 .button-blue:hover {

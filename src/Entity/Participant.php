@@ -77,7 +77,7 @@ class Participant implements UserInterface
     private $urlImage;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participant")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur")
      */
     private $sorties;
 
@@ -275,7 +275,7 @@ class Participant implements UserInterface
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties[] = $sorty;
-            $sorty->setParticipant($this);
+            $sorty->setOrganisateur($this);
         }
 
         return $this;
@@ -285,8 +285,8 @@ class Participant implements UserInterface
     {
         if ($this->sorties->removeElement($sorty)) {
             // set the owning side to null (unless already changed)
-            if ($sorty->getParticipant() === $this) {
-                $sorty->setParticipant(null);
+            if ($sorty->getOrganisateur() === $this) {
+                $sorty->setOrganisateur(null);
             }
         }
 

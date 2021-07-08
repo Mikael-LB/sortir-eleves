@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\BO\Filtrer;
 use App\Entity\Sortie;
+use App\Form\FiltrerType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,8 +22,22 @@ class SortieRepository extends ServiceEntityRepository
     }
 
 
-    public function findForFilterForm($filterForm){
-        //TODO
+    public function findForFilterForm(Filtrer $filtrer){
+
+        $idCampus = $filtrer->getCampus()->getId();
+        $nom = $filtrer->getNom();
+
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        //$queryBuilder->andWhere('sortie.nbInscriptionsMax < 4');
+        //$queryBuilder->andWhere('sortie.campus = :idcampus')->setParameter('idcampus',$idCampus);
+        if ($nom){
+            $queryBuilder->andWhere("sortie.nom LIKE '%:pnom%'")->setParameter('pnom',$nom);
+        }
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getResult();
+
+        return $result;
     }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
