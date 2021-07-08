@@ -6,11 +6,13 @@
     </div>
     <div class="padding2em">
         <ul class="flex navbar">
+            {% if app.user %}
             <li class="nodisc"><a href="" class="button">Villes</a></li>
             <li class="nodisc"><a href="" class="button">Campus</a></li>
             <li class="nodisc"><a href="" class="button">Accueil</a></li>
             <li class="nodisc"><a href="" class="button">Mon profil</a></li>
-            <li class="nodisc"><a href="" class="button">Se déconnecter</a></li>
+            <li class="nodisc"><a href="{{ path('app_logout')}}" title="logout" class="button">Se déconnecter ({{ app.user.nom }})</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>
