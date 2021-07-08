@@ -24,27 +24,32 @@ class FiltrerType extends AbstractType
             ])
             ->add('nom', TextType::class,[
                 'label' => 'Le nom de la sortie contient',
+                'required'=>false,
             ])
             ->add('dateHeureDebut', DateType::class,[
                 'html5'=>true,
-                'widget'=>'single_text'
+                'widget'=>'single_text',
             ])
             ->add('dateHeureFin', DateType::class,[
                 'html5'=>true,
-                'widget'=>'single_text'
+                'widget'=>'single_text',
             ])
             ->add('isOrganisateur', CheckboxType::class, [
                 'label'=>'Sorties dont je suis l\'organisateur/trice',
-                'required'=>false,])
+                'required'=>false,
+                ])
             ->add('isInscrit', CheckboxType::class, [
                 'label'=>'Sorties auxquelles je suis inscrit/e',
-                'required'=>false,])
+                'required'=>false,
+                ])
             ->add('notInscrit', CheckboxType::class, [
                 'label'=>'Sorties auxquelles je ne suis pas inscrit/e',
-                'required'=>false,])
+                'required'=>false,
+                ])
             ->add('oldSorties', CheckboxType::class, [
                 'label'=>'Sorties passées',
-                'required'=>false,])
+                'required'=>false,
+                ])
         ;
     }
 
