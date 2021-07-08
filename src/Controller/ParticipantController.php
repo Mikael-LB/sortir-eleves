@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ParticipantController extends AbstractController
 {
@@ -21,9 +22,19 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/participant/{id}', name: 'participant_editer')]
-    public function editer(int $id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/participant/{id}', name: 'participant_editer', requirements: ["id" => "\d+"])]
+    public function editer(int $id=1, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $emailParticipantEntrant = $this->getUser()->getUsername();
+
+        $idEntrant = ($participantRepository->findOneByEmail($emailParticipantEntrant))->getId();
+        // On redirige l'utilisateur vers SA page meme s'il bidouille
+        // l'url pour voir celle de quelqu'un d'autre
+        if ($idEntrant != $id){
+        $url = ($this->generateUrl('participant_editer',['id'=>$idEntrant],UrlGeneratorInterface::ABSOLUTE_URL)).'/'.$idEntrant;
+            return $this->redirect($url);
+        }
+
         $participant = $participantRepository->find($id);
 
         $participantFrom = $this->createForm(ParticipantType::class, $participant);
@@ -39,9 +50,7 @@ class ParticipantController extends AbstractController
 
             $this->addFlash('success','Profil modifié avec Succès');
 
-            return $this->redirectToRoute('participant_editer', [
-                'id' => $participant->getId()
-            ]);
+            return $this->redirectToRoute('sortie_liste_sorties');
         }
 
         return $this->render('participant/edit.html.twig', [
