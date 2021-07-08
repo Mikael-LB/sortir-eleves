@@ -39,25 +39,25 @@ class Participant implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\Range (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Length (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\Range (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Length (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=25)
-     * @Assert\Range(min="10", minMessage="Votre numéro doit avoir 10 chiffres", max="25", maxMessage="Pas plus de 10 chiffres (espace/point et +33 non inclus)")
+     * @Assert\Length(min="10", minMessage="Votre numéro doit avoir 10 chiffres", max="25", maxMessage="Pas plus de 10 chiffres (espace/point et +33 non inclus)")
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Range (min="4", minMessage="4 caractère minimum pour votre pseudo", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Length (min="4", minMessage="4 caractère minimum pour votre pseudo", max="50", maxMessage="Pas plus de 50 caractères SVP")
      */
     private $pseudo;
 

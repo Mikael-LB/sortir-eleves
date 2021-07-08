@@ -9,7 +9,60 @@
         </section>
         <section>
             <h2>Filtrer les sorties</h2>
-            {# todo form #}
+            <div>
+                {{ form_start(filtrerForm) }}
+                <div class="flex">
+                    <div class="flex-column">
+                        <div>
+                            {{ form_label(filtrerForm.campus) }}
+                            {{ form_widget(filtrerForm.campus) }}
+                            {{ form_errors(filtrerForm.campus) }}
+                        </div>
+                        <div>
+                            {{ form_label(filtrerForm.nom) }}
+                            {{ form_widget(filtrerForm.nom) }}
+                            {{ form_errors(filtrerForm.nom) }}
+                        </div>
+                        <div>
+                            <span>Entre :</span>
+                            {{ form_widget(filtrerForm.dateHeureDebut) }}
+                            {{ form_errors(filtrerForm.dateHeureDebut) }}
+                            <span> et </span>
+                            {{ form_widget(filtrerForm.dateHeureFin) }}
+                            {{ form_errors(filtrerForm.dateHeureFin) }}
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-column">
+                            <div>
+                            {{ form_widget(filtrerForm.isOrganisateur) }}
+                            {{ form_label(filtrerForm.isOrganisateur) }}
+                            {{ form_errors(filtrerForm.isOrganisateur) }}
+                            </div>
+                            <div>
+                            {{ form_widget(filtrerForm.isInscrit) }}
+                            {{ form_label(filtrerForm.isInscrit) }}
+                            {{ form_errors(filtrerForm.isInscrit) }}
+                            </div>
+                            <div>
+                            {{ form_widget(filtrerForm.notInscrit) }}
+                            {{ form_label(filtrerForm.notInscrit) }}
+                            {{ form_errors(filtrerForm.notInscrit) }}
+                            </div>
+                            <div>
+                            {{ form_widget(filtrerForm.oldSorties) }}
+                            {{ form_label(filtrerForm.oldSorties) }}
+                            {{ form_errors(filtrerForm.oldSorties) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-column">
+                            <button class="button-blue">Rechercher</button>
+                        </div>
+                    </div>
+                    {{ form_end(filtrerForm) }}
+                </div>
         </section>
         <section>
             <h2>Résultat du filtre</h2>
@@ -27,17 +80,23 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% set striped = false %}
                 {% for sortie in sorties %}
-                    <tr>
+                    <tr {% if striped %} class="striped" {% endif %}>
                         <td>{{ sortie.nom }}</td>
                         <td>{{ sortie.dateHeureDebut | date('d/M/Y h:m') }}</td>
                         <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
-                        <td>{# todo number of inscrits #} / {{ sortie.nbInscriptionsMax }}</td>
+                        <td>{{ sortie.assosPartiSort | length }} / {{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td>X</td>
-                        <td>{{ sortie.participant.pseudo }}</td>
+                        <td>{% if app.user == sortie.organisateur %}X{% endif %}</td>
+                        <td>{{ sortie.organisateur.pseudo }}</td>
                         <td></td>
                     </tr>
+                    {% if striped %}
+                        {% set striped = false %}
+                    {% else %}
+                        {% set striped = true %}
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
