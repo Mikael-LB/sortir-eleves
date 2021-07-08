@@ -86,6 +86,7 @@ class AppFixtures extends Fixture
                     ->setPseudo($generator->userName)
                     ->setEstAdministrateur(false)
                     ->setCompteActif(true)
+                    ->setRoles(["ROLE_USER"])
                     ->setCampus($campusList[$i])
                 ;
                 $manager->persist($participant);
