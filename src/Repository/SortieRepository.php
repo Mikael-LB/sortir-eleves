@@ -19,6 +19,10 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
+
+    public function findForFilterForm($filterForm){
+        //TODO
+    }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
     //  */

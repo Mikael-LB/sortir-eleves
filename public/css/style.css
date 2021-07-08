@@ -17,6 +17,15 @@ main {
     display: flex;
 }
 
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    display: block;
+}
+
 .space-between {
     justify-content: space-between;
 }
@@ -91,21 +100,6 @@ main {
     padding:5px 10px;
     border:1px solid #4b67f6;
 }
-
-
-.flash {
-    padding: 20px;
-    font-weight: bold;
-    font-size: 1.4rem;
-    margin: 1rem 0;
-    border-radius: 5px;
-    color: #132135;
-}
-
-.flash-success {
-    background-color: lawngreen
-}
-
-.flash-error {
-    background-color: red
+#table-sorties .striped{
+    background: #DDDDDD;
 }
