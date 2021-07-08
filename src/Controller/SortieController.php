@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
-use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\FiltrerType;
@@ -98,14 +97,14 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, EntityManagerInterface $entityManager,Request $request): Response{
+    public function creerSortie(SortieRepository $sortieRepository, EntityManagerInterface $entityManager,Request $request): Response
+    {
         $sortie = new Sortie();
-        /**
-         * @var (type= Participant)
-         */
         $organisateur = $this->getUser();
-
-        $sortie->setParticipant($organisateur);
+        /**
+         * @var $organisateur Participant
+         */
+        $sortie->setOrganisateur($organisateur);
         $sortie->setCampus($organisateur->getCampus());
 
         $sortieForm = $this->createForm(SortieType::class,$sortie);
