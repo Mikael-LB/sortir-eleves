@@ -58,7 +58,7 @@
                     </div>
                     <div class="flex">
                         <div class="flex-column">
-                            <button class="button-blue"><a href="{{ path('sortie_liste_sorties') }}" class="a-text-white">Rechercher</a></button>
+                            <button class="button-blue">Rechercher</button>
                         </div>
                     </div>
                     {{ form_end(filtrerForm) }}
@@ -88,8 +88,8 @@
                         <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
                         <td>{{ sortie.assosPartiSort | length }} / {{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td>X</td>
-                        <td>{{ sortie.participant.pseudo }}</td>
+                        <td>{% if app.user == sortie.organisateur %}X{% endif %}</td>
+                        <td>{{ sortie.organisateur.pseudo }}</td>
                         <td></td>
                     </tr>
                     {% if striped %}
