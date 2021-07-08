@@ -12,10 +12,10 @@ class Filtrer
     private $nom;
     private $dateHeureDebut;
     private $dateHeureFin;
-    private boolean $isOrganisateur;
-    private boolean $isInscrit;
-    private boolean $notInscrit;
-    private boolean $oldSorties;
+    private $isOrganisateur;
+    private $isInscrit;
+    private $notInscrit;
+    private $oldSorties;
 
     public function __construct(){
 
@@ -70,66 +70,68 @@ class Filtrer
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isOrganisateur(): bool
+    public function getIsOrganisateur()
     {
         return $this->isOrganisateur;
     }
 
     /**
-     * @param bool $isOrganisateur
+     * @param mixed $isOrganisateur
      */
-    public function setIsOrganisateur(bool $isOrganisateur): void
+    public function setIsOrganisateur($isOrganisateur): void
     {
         $this->isOrganisateur = $isOrganisateur;
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isInscrit(): bool
+    public function getIsInscrit()
     {
         return $this->isInscrit;
     }
 
     /**
-     * @param bool $isInscrit
+     * @param mixed $isInscrit
      */
-    public function setIsInscrit(bool $isInscrit): void
+    public function setIsInscrit($isInscrit): void
     {
         $this->isInscrit = $isInscrit;
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isNotInscrit(): bool
+    public function getNotInscrit()
     {
         return $this->notInscrit;
     }
 
     /**
-     * @param bool $notInscrit
+     * @param mixed $notInscrit
      */
-    public function setNotInscrit(bool $notInscrit): void
+    public function setNotInscrit($notInscrit): void
     {
         $this->notInscrit = $notInscrit;
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isOldSorties(): bool
+    public function getOldSorties()
     {
         return $this->oldSorties;
     }
 
     /**
-     * @param bool $oldSorties
+     * @param mixed $oldSorties
      */
-    public function setOldSorties(bool $oldSorties): void
+    public function setOldSorties($oldSorties): void
     {
         $this->oldSorties = $oldSorties;
     }
+
+
 }
