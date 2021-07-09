@@ -47,7 +47,7 @@ class ParticipantType extends AbstractType
                     'label' => 'Confirmation :',
                 ],
                 'invalid_message' => 'Les deux champs doivent etre identique',
-                'mapped' => false
+                'mapped' => false,
             ])
             ->add('campus', EntityType::class,[
                 'class' => Campus::class,

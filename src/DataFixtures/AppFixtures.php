@@ -74,6 +74,22 @@ class AppFixtures extends Fixture
         $campusList = $this->campusRepository->findAll();
         $nbCampus = count($campusList);
 
+
+        //Création des participants
+        $participant= new Participant();
+        $participant->setNom('Terrieur')
+            ->setEmail('a@mail.com')
+            ->setPrenom('Alain')
+            ->setPassword($this->passwordEncoder->encodePassword($participant, 'password'))
+            ->setTelephone('02 22 33 44 55 66')
+            ->setPseudo('JeDébug')
+            ->setEstAdministrateur(true)
+            ->setCompteActif(true)
+            ->setRoles(["ROLE_USER"])
+            ->setCampus($campusList[1])
+        ;
+        $manager->persist($participant);
+
         //Création des participants
         for ($i = 0; $i < $nbCampus; $i++) {
             for ($j = 0; $j< 5; $j++){
@@ -159,6 +175,8 @@ class AppFixtures extends Fixture
         $etatTerminee = $this->etatRepository->findOneByLibelle(['Terminée']);
         $etatOuverte = $this->etatRepository->findOneByLibelle(['Ouverte']);
         $etatEnCours = $this->etatRepository->findOneByLibelle(['En Cours']);
+        $etatEnCreation = $this->etatRepository->findOneByLibelle(['En Création']);
+
 
         // Création des Sortie avec AssosPartiSort
         // et le référencement des lieux et états
@@ -167,9 +185,12 @@ class AppFixtures extends Fixture
             $sortie = new Sortie();
             $nbMaxParticipant = $generator->numberBetween(2, 20);
             $dateHeureDebut = $generator->dateTimeBetween('-2 months','+2 months');
+//            $dateHeureDebut = $generator->dateTimeBetween('-2 months','+2 months');
             $dateLimiteInscription = new \DateTime($dateHeureDebut->format('Y-m-d H:i:s'));
             date_sub($dateLimiteInscription, date_interval_create_from_date_string('2 days'));
-            $duree = $generator->numberBetween(30, 10080);
+//            $duree = $generator->numberBetween(30, 10080);
+            // 30 min | 10080 -> 7 jour | 43200 -> 1 mois
+            $duree = $generator->numberBetween(43200, 43210);
             $dateHeureFin = new \DateTime($dateHeureDebut->format('Y-m-d H:i:s'));
             date_modify($dateHeureFin, '+'.$duree.' minutes');
             $dateHistorisation = new \DateTime($dateHeureFin->format('Y-m-d H:i:s'));
@@ -241,6 +262,9 @@ class AppFixtures extends Fixture
                     }
                 }
             }
+
+            /* ANCIENNE ATTRIBUTION DES ETATS
+
             // On annule la sortie
             else{
                 for ($j=0; $j<($nbMaxParticipant-1); $j++){
@@ -266,7 +290,7 @@ class AppFixtures extends Fixture
                 }
             }
             // On historise toutes les sorties annulée ou finies depuis plus d'un mois
-            if ($dateHistorisation > $nowDate){
+            if ($dateHistorisation < $nowDate){
                 $sortie->setEtat($etatHistorisee);
                 $etatHistorisee->addSorty($sortie);
             }
@@ -303,7 +327,73 @@ class AppFixtures extends Fixture
                     $sortie->setEtat($etatTerminee);
                     $etatTerminee->addSorty($sortie);
                 }
+                else {
+                    $sortie->setEtat( $etatEnCreation);
+                    $etatEnCreation->addSorty($sortie);
+                }
             }
+
+Fin ancienne version  */
+
+//            $etatAnnulee = $this->etatRepository->findOneByLibelle(['Annulée']);
+//            $etatHistorisee = $this->etatRepository->findOneByLibelle(['Historisée']);
+//            $etatCloturee = $this->etatRepository->findOneByLibelle(['Clôturée']);
+//            $etatTerminee = $this->etatRepository->findOneByLibelle(['Terminée']);
+//            $etatOuverte = $this->etatRepository->findOneByLibelle(['Ouverte']);
+//            $etatEnCours = $this->etatRepository->findOneByLibelle(['En Cours']);
+//            $etatEnCreation = $this->etatRepository->findOneByLibelle(['En Création']);
+
+
+
+            $selectionEtat = $generator->numberBetween(1,7);
+            switch ($selectionEtat){
+                case 1 :
+                    $sortie->setEtat($etatEnCreation);
+                    $etatEnCreation->addSorty($sortie);
+                    break;
+                case 2 :
+
+                    $sortie->setEtat($etatOuverte);
+                    $etatOuverte->addSorty($sortie);
+                    break;
+
+                case 3 :
+
+                    $sortie->setEtat($etatCloturee);
+                    $etatCloturee->addSorty($sortie);
+                    break;
+                case 4 :
+
+                    $sortie->setEtat($etatEnCours);
+                    $etatEnCours->addSorty($sortie);
+                    break;
+
+                case 5 :
+
+                    $sortie->setEtat($etatAnnulee);
+                    $etatAnnulee->addSorty($sortie);
+                    break;
+                case 6 :
+
+                    $sortie->setEtat($etatTerminee);
+                    $etatTerminee->addSorty($sortie);
+                    break;
+
+                case 7 :
+
+                    $sortie->setEtat($etatHistorisee);
+                    $etatHistorisee->addSorty($sortie);
+                    break;
+
+                default :
+                    printf(ERROR, 'BUG DANS LE SWITCH');
+                    break;
+
+
+            }
+
+
+
             // On fait persister notre sortie
             $manager->persist($sortie);
         }
@@ -314,6 +404,7 @@ class AppFixtures extends Fixture
         $manager->persist($etatTerminee);
         $manager->persist($etatOuverte);
         $manager->persist($etatEnCours);
+        $manager->persist($etatEnCreation);
         $manager->flush();
     }
 }

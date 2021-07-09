@@ -5,22 +5,61 @@
 {% endblock %}
 
 {% block body %}
-    {%  %}
+
     {{ form_start(sortieForm) }}
-{#    {{ form_widget(sortieForm) }}#}
+    <div>
     {{ form_row(sortieForm.nom) }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.dateHeureDebut) }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.dateLimiteInscription) }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.nbInscriptionsMax) }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.duree) }}
-    Campus : {{ campus }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.infosSortie) }}
+
+    </div>
+    <div>
+    Campus : {{ campus }}
+
+    </div>
+    <div>
     {{ form_row(sortieForm.Ville) }}
+
+    </div>
+    <div>
     <div>
         {{ form_row(sortieForm.Lieu) }}
-        <button class="plus-button"></button>
+        <a href=""><button class="plus-button"></button></a>
     </div>
-    <button class="button-blue"></button>
+        <div>
+        <label for="latitude"></label><input id="latitude" type="text" readonly>
+
+        </div>
+        <div>
+
+        </div>
+        <div>
+
+        </div>
+        <div>
+
+        </div>
+    </div>
+{#    {{ form_widget(sortieForm) }}#}
+    <button class="button button-blue">Envoyer</button>
     {{ form_start(sortieForm) }}
 
 {% endblock %}
