@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AssosPartiSort;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
