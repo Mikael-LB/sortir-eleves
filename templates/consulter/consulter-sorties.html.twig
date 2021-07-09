@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <h2>Consultation des détails de la sortie</h2>
-    <p>Nom : {{sortie.nom}}</p>
+    <p>Nom : {{ sortie.nom }}</p>
     <br>
-    <p>Date et heure de sortie: {{ sortie.dateHeureDebut | date('d/m/Y')}}</p>
+    <p>Date et heure de sortie: {{ sortie.dateHeureDebut | date('d/m/Y') }}</p>
     <br>
     <p>Date limite d'inscription: {{ sortie.dateLimiteInscription | date('d/m/Y') }}</p>
     <br>
@@ -16,34 +17,37 @@
     <br>
     <p>Campus: {{ sortie.campus.nom }}</p>
     <br>
-    <p>lieu: {{ lieu.nom }}</p>
+    <p>lieu: {{ sortie.lieu.nom }}</p>
     <br>
-    <p>Rue: {{ lieu.rue }}</p>
+    <p>Rue: {{ sortie.lieu.rue }}</p>
     <br>
-    <p>Code postal: {{ ville.codePostal }}</p>
+    <p>Code postal: {{ sortie.lieu.ville.codePostal }}</p>
     <br>
-    <p>Latitude: {{ lieu.latitude }}</p>
+    <p>Latitude: {{ sortie.lieu.latitude }}</p>
     <br>
-    <p>longitude: {{ lieu.longitude }}</p>
+    <p>longitude: {{ sortie.lieu.longitude }}</p>
     <br>
 
     <h2>Liste des participants inscrits</h2>
 
     <table>
         <thead>
-            <tr>
-                <th>Pseudo</th>
-                <th>Nom</th>
-            </tr>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+        </tr>
         </thead>
 
         <tbody>
-        {% for participant in participants %}
+        {% for assosPartiSort in sortie.assosPartiSort %}
             <tr>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.pseudo }}</td>
+                <td>{{ assosPartiSort.participant.nom }}</td>
+                <td>{{ assosPartiSort.participant.pseudo }}</td>
             </tr>
+
+
         {% endfor %}
+
         </tbody>
     </table>
 

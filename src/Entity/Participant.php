@@ -39,7 +39,7 @@ class Participant implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Assert\Length (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Length (min=3, minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
      */
     private $nom;
 

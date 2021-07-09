@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}| Lieu création
+{% endblock %}
+
+{% block body %}
+<h2>Création d'un lieu</h2>
+
+    {{ form_start(lieuForm) }}
+    <div>
+        {{ form_label(lieuForm.nom) }}
+        {{ form_widget(lieuForm.nom) }}
+        {{ form_errors(lieuForm.nom) }}
+    </div>
+    <div>
+        {{ form_label(lieuForm.rue) }}
+        {{ form_widget(lieuForm.rue) }}
+        {{ form_errors(lieuForm.rue) }}
+
+    </div>
+    <div>
+        {{ form_label(lieuForm.latitude) }}
+        {{ form_widget(lieuForm.latitude) }}
+        {{ form_errors(lieuForm.latitude) }}
+
+    </div>
+    <div>
+        {{ form_label(lieuForm.longitude) }}
+        {{ form_widget(lieuForm.longitude) }}
+        {{ form_errors(lieuForm.longitude) }}
+
+    </div>
+    <div>
+        {{ form_label(lieuForm.Ville) }}
+        {{ form_widget(lieuForm.Ville) }}
+        {{ form_errors(lieuForm.Ville) }}
+
+    </div>
+    <div>
+
+    </div>
+    <div>
+<button class="button button-blue">Enregistrer</button>
+    </div>
+{{ form_end(lieuForm) }}
+
+{% endblock %}
+

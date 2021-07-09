@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\AssosPartiSort;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
 use App\Entity\Sortie;
+use App\Entity\Campus;
 use App\Entity\Ville;
 use App\Form\FiltrerType;
 use App\Form\SortieType;
+use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
@@ -87,9 +90,112 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(){
+    public function creerSortie(SortieRepository $sortieRepository, CampusRepository $campusRepository, EtatRepository $etatRepository ,EntityManagerInterface $entityManager,Request $request): Response
+    {
+        $sortie = new Sortie();
+        $organisateur = $this->getUser();
+        /**
+         * @var $organisateur Participant
+         */
+        $sortie->setOrganisateur($organisateur);
+//        $campus = $campusRepository->find($organisateur->getCampus());
+        $campusId = $organisateur->getCampus()->getId();
+        $campus = $campusRepository->find($campusId);
+        $sortie->setCampus($organisateur->getCampus());
+        $sortie->setEtat($etatRepository->findOneByLibelle(['En Création']));
 
+        $sortieForm = $this->createForm(SortieType::class,$sortie);
+
+        $sortieForm->handleRequest($request);
+            $dataLieu = $sortieForm->get('Lieu')->getData();
+
+            $sortie->setLieu($dataLieu);
+            $dataVille = $sortieForm->get('Ville')->getData();
+
+
+//        dd($sortie);
+//        dd($sortieForm->isSubmitted());
+//        dd($sortieForm->isValid());
+
+if ($sortieForm->isSubmitted()){
+dd($sortieForm->get('plus')->getData());
+
+}
+//            dd($sortieForm->get('plus')->isSubmitted());
+        if($sortieForm->getClickedButton() ){
+            return $this->redirectToRoute('lieu_creer');
+        }
+//
+//        if( $sortieForm->get('plus')->isSubmitted()){
+//            return $this->redirectToRoute('lieu_creer');
+//        }
+
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Sortie créée avec Succès');
+
+            // A modifier et rediriger vers la visualisation de sortie détail
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }
+
+        return $this->render('sortie/creer-sortie.html.twig', [
+            'sortieForm' => $sortieForm->createView(),
+            'campus' => $sortie->getCampus()->getNom(),
+
+        ]);
 
     }
+
+
+
+    #[Route('/sorties/inscrire/{id}', name: 'sorties_inscrire')]
+    public function inscrire ($id,
+                              SortieRepository $sortieRepository,
+                              EntityManagerInterface $entityManager
+                              ): Response
+        //Accéder à s'inscrire
+    { $assosPartiSort = new AssosPartiSort();
+        $sortie = $sortieRepository->find($id);
+        $assosPartiSort->setSortie($sortie)
+                        ->setParticipant($this->getUser());
+
+        //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
+        //Alors on peut ajouter le participant à la liste des inscrits
+       /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
+        //Vérifier si le participant existe déjà avec une requête
+        //findOneBy (where)
+
+
+        //j'ajoute l'instance à l'objet Sortie
+        $sortie->addAssosPartiSort($assosPartiSort);
+        $entityManager->persist($sortie);
+        $entityManager->persist($assosPartiSort);
+        $entityManager->flush();
+
+        return $this->render('inscrire/inscrire-sorties.html.twig', [
+            'sortie'=> $sortie,
+
+        ]);
+    }
+
+
+    #[Route('/sorties/{id}', name: 'consulter_desister')]
+    public function desister ($id
+                                ): Response
+
+    {
+        //On peut se désister si inscrit && dateDebut < dateDuJour
+        //nombre de places libre +1
+
+        return $this->render('sortie/liste-sorties.html.twig', [
+
+        ]);
+    }
+
+
 
 }

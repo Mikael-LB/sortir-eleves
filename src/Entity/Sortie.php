@@ -6,6 +6,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -21,6 +22,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=3, minMessage="Plus de 3 caractères svp", max=255, maxMessage="moins de 255 caractères svp")
      */
     private $nom;
 
@@ -46,6 +48,8 @@ class Sortie
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=3, minMessage="Plus de 3 caractères SVP")
+     * @Assert\NotBlank()
      */
     private $infosSortie;
 

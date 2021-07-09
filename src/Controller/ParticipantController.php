@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ParticipantController extends AbstractController
 {
@@ -25,7 +26,7 @@ class ParticipantController extends AbstractController
 //    #[Route('/participant/{id}', name: 'participant_editer', requirements: ["id" => "\d+"])]
 
     #[Route('/participant/{id}', name: 'participant_editer', requirements: ["id" => "\d+"])]
-    public function editer(int $id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Request $request): Response
+    public function editer(int $id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
 //        $emailParticipantEntrant = $this->getUser()->getUsername();
 //
@@ -53,6 +54,24 @@ class ParticipantController extends AbstractController
         if($participantFrom->isSubmitted() && $participantFrom->isValid()){
 
             //TODO faire une fonction pour Uploader une photo de profil
+////
+//            try {
+//
+//            }catch (Exception $exception){
+//
+//            }
+//            if (
+//                 $participantFrom->get('plainPassword')->getData() !== null){
+//
+//            $encodedPassword = $passwordEncoder->encodePassword(
+//                $participant,
+//                $participantFrom->get('plainPassword')->getData()
+//            );
+//
+//            $participant->setPassword($encodedPassword);
+//            }
+
+
 
             $entityManager->persist($participant);
             $entityManager->flush();

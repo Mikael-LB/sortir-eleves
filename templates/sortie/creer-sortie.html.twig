@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}|créer une Sortie
+{% endblock %}
+
+{% block body %}
+<h2>Création d'une sortie</h2>
+
+    {{ form_start(sortieForm) }}
+    <div>
+    {{ form_row(sortieForm.nom) }}
+
+    </div>
+    <div>
+        {{ field_label(sortieForm.dateHeureDebut) }}
+        {{ form_widget(sortieForm.dateHeureDebut) }}
+        {{ form_errors(sortieForm.dateHeureDebut) }}
+{#    {{ form_row(sortieForm.dateHeureDebut) | date("d/m/Y") }}#}
+
+    </div>
+    <div>
+        {{ field_label(sortieForm.dateLimiteInscription) }}
+        {{ form_widget(sortieForm.dateLimiteInscription) }}
+        {{ form_errors(sortieForm.dateLimiteInscription) }}
+{#    {{ form_row(sortieForm.dateLimiteInscription) | date("d/m/Y")  }}#}
+
+    </div>
+    <div>
+    {{ form_row(sortieForm.nbInscriptionsMax) }}
+
+    </div>
+    <div>
+    {{ form_row(sortieForm.duree) }}
+
+    </div>
+    <div>
+    {{ form_row(sortieForm.infosSortie) }}
+
+    </div>
+    <div>
+    Campus : {{ campus }}
+
+    </div>
+    <div>
+    {{ form_row(sortieForm.Ville) }}
+
+    </div>
+    <div>
+    <div>
+        {{ field_label(sortieForm.Lieu) }}
+        {{ form_widget(sortieForm.Lieu) }}
+        {{ form_errors(sortieForm.Lieu) }}
+{#        <a href="{{ path('lieu_creer') }}">➕</a>#}
+        {{ form_widget(sortieForm.plus) }}
+{#        <a href="{{ path('lieu_creer') }}"><button class="plus-button">➕</button>  </a>#}
+    </div>
+        <div>
+        <label for="rue">Rue :</label><input id="rue" type="text" readonly>
+        </div>
+        <div>
+        <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
+        </div>
+        <div>
+        <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
+        </div>
+        <div>
+        <label for="longitude">longitude :</label><input id="longitude" type="text" readonly>
+        </div>
+    </div>
+{#    {{ form_widget(sortieForm) }}#}
+    <button class="button button-blue">Envoyer</button>
+    {{ form_end(sortieForm) }}
+
+{% endblock %}
+
