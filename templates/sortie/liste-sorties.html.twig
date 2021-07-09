@@ -90,7 +90,7 @@
                         <td>{{ sortie.etat.libelle }}</td>
                         <td>{% if app.user == sortie.organisateur %}X{% endif %}</td>
                         <td>{{ sortie.organisateur.pseudo }}</td>
-                        <td></td>
+                        <td><a href="{{ path('sorties_consulter',{'id': sortie.id}) }}" title=" détails de la sortie">Afficher</a></td>
                     </tr>
                     {% if striped %}
                         {% set striped = false %}

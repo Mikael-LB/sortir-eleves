@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <h2>Consultation des détails de la sortie</h2>
     <p>Nom : {{sortie.nom}}</p>
     <br>
@@ -27,6 +28,8 @@
     <p>longitude: {{ lieu.longitude }}</p>
     <br>
 
+
+
     <h2>Liste des participants inscrits</h2>
 
     <table>
@@ -38,12 +41,10 @@
         </thead>
 
         <tbody>
-        {% for participant in participants %}
-            <tr>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.pseudo }}</td>
-            </tr>
-        {% endfor %}
+                {% for assosPartiSort in sortie.assosPartiSort %}
+                    <td>{{ assosPartiSort.participant.nom }}</td>
+                {% endfor %}
+
         </tbody>
     </table>
 
