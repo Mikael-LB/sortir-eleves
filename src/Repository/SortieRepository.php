@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\BO\Filtrer;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\FiltrerType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,13 +24,17 @@ class SortieRepository extends ServiceEntityRepository
     }
 
 
-    public function findForFilterForm(Filtrer $filtrer){
+    public function findForFilterForm(Filtrer $filtrer, Participant $participant)
+    {
 
         $idCampus = $filtrer->getCampus()->getId();
         $nom = $filtrer->getNom();
         $dateDebut = $filtrer->getDateHeureDebut();
         $dateFin = $filtrer->getDateHeureFin();
         $isOrganisateur = $filtrer->getIsOrganisateur();
+        $isInscrit = $filtrer->getIsInscrit();
+        $notInscrit = $filtrer->getNotInscrit();
+        $passees = $filtrer->getOldSorties();
 
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->andWhere('sortie.campus = :idcampus')->setParameter('idcampus',$idCampus);
@@ -40,6 +46,31 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('dateDebut',$dateDebut)
                 ->setParameter('dateFin',$dateFin);
         }
+        if($isOrganisateur){
+            $queryBuilder->andWhere('sortie.organisateur = :user')->setParameter('user',$participant->getId());
+        }
+
+        //when the 2 options isInscrit and notInscrit are checked, the result contains all result
+        if ($isInscrit XOR $notInscrit) {
+            $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
+            $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
+
+            if ($isInscrit) {
+                $queryBuilder->andWhere('assos.participant = :user')->setParameter('user', $participant->getId());
+            }
+            if ($notInscrit) {
+                $queryBuilder->andWhere('assos.participant != :user')->setParameter('user', $participant->getId());
+            }
+        }
+
+        if($passees){
+            $queryBuilder->andWhere("CURRENT_DATE() > DATE_ADD(sortie.dateHeureDebut, sortie.duree, 'minute')");
+        }
+
+        //remove sorties historisées
+        $queryBuilder->join('sortie.etat','etat')->addSelect('etat');
+        $queryBuilder->andWhere('etat.id != 7');
+
 
 
         $query = $queryBuilder->getQuery();

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AssosPartiSort;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
@@ -28,27 +29,18 @@ class SortieController extends AbstractController
                                  EtatRepository $etatRepository,
                                  ParticipantRepository $participantRepository): Response
     {
-
-        //$sorties = $sortieRepository->findAll();
-        /*$sortie = new Sortie();
-        $sortie->setNom('Philo')
-            ->setDateHeureDebut(new \DateTime('now'))
-            ->setDateLimiteInscription(new \DateTime('now + 2 day'))
-            ->setNbInscriptionsMax(8)
-            ->setEtat($etatRepository->find(1))
-            ->setOrganisateur($participantRepository->find(1));
-        $sorties = [$sortie];*/
+        //initial fill with all results
         $sorties = $sortieRepository->findAll();
-
-
 
         $filtrer = new Filtrer();
         $filtrerForm = $this->createForm(FiltrerType::class,$filtrer);
         $filtrerForm->handleRequest($request);
 
         if($filtrerForm->isSubmitted() && $filtrerForm->isValid()){
+            $participant = $this->getUser();
+            //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
             $filtrer = $filtrerForm->getData();
-            $sorties = $sortieRepository->findForFilterForm($filtrer);
+            $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
         }
 
         return $this->render('sortie/liste-sorties.html.twig', [
@@ -58,7 +50,7 @@ class SortieController extends AbstractController
     }
 
 
-    #[Route('/sorties/consulter/{id}', name: 'sorties_consulter')]
+    #[Route('/sorties/consulter/{id}', name: 'sorties_consulter', requirements:['id'=>'\d+'])]
     public function consulter($id,
                               SortieRepository $sortieRepository,
                                 LieuRepository $lieuRepository,
@@ -150,5 +142,53 @@ class SortieController extends AbstractController
         ]);
 
     }
+
+
+
+    #[Route('/sorties/inscrire/{id}', name: 'sorties_inscrire')]
+    public function inscrire ($id,
+                              SortieRepository $sortieRepository,
+                              EntityManagerInterface $entityManager
+                              ): Response
+        //Accéder à s'inscrire
+    { $assosPartiSort = new AssosPartiSort();
+        $sortie = $sortieRepository->find($id);
+        $assosPartiSort->setSortie($sortie)
+                        ->setParticipant($this->getUser());
+
+        //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
+        //Alors on peut ajouter le participant à la liste des inscrits
+       /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
+        //Vérifier si le participant existe déjà avec une requête
+        //findOneBy (where)
+
+
+        //j'ajoute l'instance à l'objet Sortie
+        $sortie->addAssosPartiSort($assosPartiSort);
+        $entityManager->persist($sortie);
+        $entityManager->persist($assosPartiSort);
+        $entityManager->flush();
+
+        return $this->render('inscrire/inscrire-sorties.html.twig', [
+            'sortie'=> $sortie,
+
+        ]);
+    }
+
+
+    #[Route('/sorties/{id}', name: 'consulter_desister')]
+    public function desister ($id
+                                ): Response
+
+    {
+        //On peut se désister si inscrit && dateDebut < dateDuJour
+        //nombre de places libre +1
+
+        return $this->render('sortie/liste-sorties.html.twig', [
+
+        ]);
+    }
+
+
 
 }
