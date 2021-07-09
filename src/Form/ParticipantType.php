@@ -26,14 +26,15 @@ class ParticipantType extends AbstractType
             ->add('nom', TextType::class)
             ->add('telephone', TextType::class)
             ->add('email', TextType::class)
-            ->add('PlainePassword', RepeatedType::class,[
+            ->add('plainPassword', RepeatedType::class,[
                 'type' => PasswordType::class,
+                'required' => false,
                 'first_options' => [
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Entrer votre mot de passe',
-                        ]),
+//                        new NotBlank([
+//                            'message' => 'Entrer votre mot de passe',
+//                        ]),
                         new Length([
                             'min' => 6,
                             'minMessage' => 'Votre mot de passe doit faire {{ limit }} caractères au minimum',
