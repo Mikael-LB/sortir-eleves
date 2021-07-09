@@ -121,3 +121,11 @@ main {
 .flash-error {
     background-color: red
 }
+
+.box-shad{
+    box-shadow: 0 0 0.2em #3ca6fc, 0 0 0.2em #3ca6fc;
+}
+
+.text-white{
+    color:white;
+}
