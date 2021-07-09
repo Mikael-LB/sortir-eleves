@@ -10,6 +10,8 @@
             <li class="nodisc"><a href="{{ path('sortie_liste_sorties') }}" class="button">Accueil</a></li>
             <li class="nodisc"><a href="" class="button">Villes</a></li>
             <li class="nodisc"><a href="" class="button">Campus</a></li>
+            <li class="nodisc"><a href="{{ path('sortie_creer') }}" class="button">Creer Sortie</a></li>
+            <li class="nodisc"><a href="{{ path('lieu_creer') }}" class="button">Creer Lieu</a></li>
             <li class="nodisc"><a href=" {{ path('participant_editer', {'id': app.user.id}) }} " class="button">Mon profil</a></li>
             <li class="nodisc"><a href="{{ path('app_logout')}}" title="logout" class="button">Se déconnecter ({{ app.user.nom }})</a></li>
             <li class="nodisc"><a href="" class="button">S'inscrire</a></li>

@@ -6,16 +6,17 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
 use App\Entity\Sortie;
+use App\Entity\Campus;
 use App\Entity\Ville;
 use App\Form\FiltrerType;
 use App\Form\SortieType;
+use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Util\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,7 +98,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, EntityManagerInterface $entityManager,Request $request): Response
+    public function creerSortie(SortieRepository $sortieRepository, CampusRepository $campusRepository, EtatRepository $etatRepository ,EntityManagerInterface $entityManager,Request $request): Response
     {
         $sortie = new Sortie();
         $organisateur = $this->getUser();
@@ -105,11 +106,38 @@ class SortieController extends AbstractController
          * @var $organisateur Participant
          */
         $sortie->setOrganisateur($organisateur);
+//        $campus = $campusRepository->find($organisateur->getCampus());
+        $campusId = $organisateur->getCampus()->getId();
+        $campus = $campusRepository->find($campusId);
         $sortie->setCampus($organisateur->getCampus());
+        $sortie->setEtat($etatRepository->findOneByLibelle(['En Création']));
 
         $sortieForm = $this->createForm(SortieType::class,$sortie);
 
         $sortieForm->handleRequest($request);
+            $dataLieu = $sortieForm->get('Lieu')->getData();
+
+            $sortie->setLieu($dataLieu);
+            $dataVille = $sortieForm->get('Ville')->getData();
+
+
+//        dd($sortie);
+//        dd($sortieForm->isSubmitted());
+//        dd($sortieForm->isValid());
+
+if ($sortieForm->isSubmitted()){
+dd($sortieForm->get('plus')->getData());
+
+}
+//            dd($sortieForm->get('plus')->isSubmitted());
+        if($sortieForm->getClickedButton() ){
+            return $this->redirectToRoute('lieu_creer');
+        }
+//
+//        if( $sortieForm->get('plus')->isSubmitted()){
+//            return $this->redirectToRoute('lieu_creer');
+//        }
+
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
 

@@ -89,6 +89,9 @@ class AppFixtures extends Fixture
             ->setCampus($campusList[1])
         ;
         $manager->persist($participant);
+        $campus->addParticipant($participant);
+        $manager->persist($campus);
+
 
         //Création des participants
         for ($i = 0; $i < $nbCampus; $i++) {
@@ -105,7 +108,10 @@ class AppFixtures extends Fixture
                     ->setRoles(["ROLE_USER"])
                     ->setCampus($campusList[$i])
                 ;
+                $campusList[$i]->addParticipant($participant);
+
                 $manager->persist($participant);
+                $manager->persist($campusList[$i]);
             }
         }
         $manager->flush();
@@ -157,8 +163,10 @@ class AppFixtures extends Fixture
                     ->setLatitude($generator->latitude)
                     ->setLongitude($generator->longitude)
                     ->setVille($villeList[$i]);
+                $villeList[$i]->addLieux($lieu);
 
                 $manager->persist($lieu);
+                $manager->persist($villeList[$i]);
             }
         }
             $manager->flush();
@@ -405,6 +413,7 @@ Fin ancienne version  */
         $manager->persist($etatOuverte);
         $manager->persist($etatEnCours);
         $manager->persist($etatEnCreation);
+
         $manager->flush();
     }
 }

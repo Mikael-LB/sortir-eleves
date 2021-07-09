@@ -7,9 +7,12 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ButtonBuilder;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,10 +27,14 @@ class SortieType extends AbstractType
                 'label' => 'Nom de votre Sortie :'
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
-                'label' => 'Date et heure de début de votre sortie :'
+                'label' => 'Date et heure de début de votre sortie :',
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
             ])
             ->add('dateLimiteInscription', DateType::class, [
-                'label' => 'Date de cloture des inscriptions :'
+                'label' => 'Date de cloture des inscriptions :',
+                'html5' => true,
+                'widget' => 'single_text'
             ])
             ->add('nbInscriptionsMax', NumberType::class, [
                 'label' => 'Nombre MAX de participant (vous exclu) :'
@@ -51,10 +58,27 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
                 'mapped' => false,
-                'inherit_data' => Ville::class,
+            ])
+            ->add('plus', SubmitType::class,[
+                'label' => '➕',
+            ])
+            ->add('enregistrer', SubmitType::class,[
+                'label' => 'Enregistrer sans publier'
+            ])
+            ->add('publier', SubmitType::class,[
+                'label' => 'Publier'
             ])
         ;
+
+
     }
+//
+//    public function buildButton(ButtonBuilder $builder, array $options){
+//        $builder->add('PLUS-BUTTON', ButtonType::class, [
+//            'label' => '➕'
+//        ])
+//            ;
+//    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
