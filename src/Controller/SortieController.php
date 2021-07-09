@@ -130,4 +130,52 @@ class SortieController extends AbstractController
 
     }
 
+
+
+    #[Route('/sorties/inscrire/{id}', name: 'sorties_inscrire')]
+    public function inscrire ($id,
+                              SortieRepository $sortieRepository,
+                              EntityManagerInterface $entityManager
+                              ): Response
+        //Accéder à s'inscrire
+    { $assosPartiSort = new AssosPartiSort();
+        $sortie = $sortieRepository->find($id);
+        $assosPartiSort->setSortie($sortie)
+                        ->setParticipant($this->getUser());
+
+        //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
+        //Alors on peut ajouter le participant à la liste des inscrits
+       /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
+        //Vérifier si le participant existe déjà avec une requête
+        //findOneBy (where)
+
+
+        //j'ajoute l'instance à l'objet Sortie
+        $sortie->addAssosPartiSort($assosPartiSort);
+        $entityManager->persist($sortie);
+        $entityManager->persist($assosPartiSort);
+        $entityManager->flush();
+
+        return $this->render('inscrire/inscrire-sorties.html.twig', [
+            'sortie'=> $sortie,
+
+        ]);
+    }
+
+
+    #[Route('/sorties/{id}', name: 'consulter_desister')]
+    public function desister ($id
+                                ): Response
+
+    {
+        //On peut se désister si inscrit && dateDebut < dateDuJour
+        //nombre de places libre +1
+
+        return $this->render('sortie/liste-sorties.html.twig', [
+
+        ]);
+    }
+
+
+
 }
