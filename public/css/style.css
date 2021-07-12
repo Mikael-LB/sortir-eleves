@@ -160,3 +160,9 @@ main {
              width: 1em;
          }
     }
+
+#div-fix-height{
+    height:400px;
+    max-height: 400px;
+    overflow: auto;
+}

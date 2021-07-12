@@ -5,16 +5,45 @@ namespace App\BO;
 
 
 use App\Entity\Campus;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Filtrer
 {
+    /**
+     * @var Campus
+     * @Assert\NotNull(message="Ne peut être vide")
+     */
     private $campus;
+    /**
+     * @var string
+     * @Assert\Length (max="50", maxMessage="Recherche limitée à 50 caractères")
+     */
     private $nom;
+    /**
+     * @var \DateTime
+     */
     private $dateHeureDebut;
+    /**
+     * @var \DateTime
+     * @Assert\GreaterThan(propertyPath="dateHeureDebut",
+     *     message="La date de fin doit être postérieure à la date de début")
+     */
     private $dateHeureFin;
+    /**
+     * @var boolean
+     */
     private $isOrganisateur;
+    /**
+     * @var boolean
+     */
     private $isInscrit;
+    /**
+     * @var boolean
+     */
     private $notInscrit;
+    /**
+     * @var boolean
+     */
     private $oldSorties;
 
     public function __construct(){
