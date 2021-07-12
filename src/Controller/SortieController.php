@@ -32,7 +32,7 @@ class SortieController extends AbstractController
                                  ParticipantRepository $participantRepository): Response
     {
         //initial fill with all results
-        $sorties = $sortieRepository->findAll();
+        $sorties = $sortieRepository->findBy([],["dateHeureDebut"=>"ASC"]);
 
         $filtrer = new Filtrer();
         $filtrerForm = $this->createForm(FiltrerType::class,$filtrer);

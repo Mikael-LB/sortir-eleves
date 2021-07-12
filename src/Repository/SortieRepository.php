@@ -71,6 +71,9 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->join('sortie.etat','etat')->addSelect('etat');
         $queryBuilder->andWhere('etat.id != 7');
 
+        //order by dateHeureSortie
+        $queryBuilder->orderBy('sortie.dateHeureDebut');
+
 
 
         $query = $queryBuilder->getQuery();
