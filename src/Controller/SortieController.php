@@ -145,20 +145,23 @@ class SortieController extends AbstractController
 
 
 
-    #[Route('/sorties/inscrire/{id}', name: 'sorties_inscrire')]
+    #[Route('/sorties/inscrire/{id}', name:'sorties_inscrire')]
     public function inscrire ($id,
                               SortieRepository $sortieRepository,
                               EntityManagerInterface $entityManager
                               ): Response
         //Accéder à s'inscrire
     { $assosPartiSort = new AssosPartiSort();
+        //Recherche une sortie par sa clé primaire (id)
         $sortie = $sortieRepository->find($id);
         $assosPartiSort->setSortie($sortie)
                         ->setParticipant($this->getUser());
 
+
         //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
         //Alors on peut ajouter le participant à la liste des inscrits
        /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
+
         //Vérifier si le participant existe déjà avec une requête
         //findOneBy (where)
 
@@ -176,7 +179,7 @@ class SortieController extends AbstractController
     }
 
 
-    #[Route('/sorties/desister/{id}', name: 'consulter_desister')]
+    #[Route('/sorties/desister/{id}', name: 'sorties_desister')]
     public function desister ($id
                                 ): Response
 

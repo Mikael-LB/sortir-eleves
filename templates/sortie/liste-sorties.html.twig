@@ -93,6 +93,7 @@
                         <td>{{ sortie.organisateur.pseudo }}</td>
                         <td>
                             <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
+
                             {% if isInscrit %}
                                 <span> - </span>
                                 <a href="">Se désister</a>
