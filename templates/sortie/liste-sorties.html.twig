@@ -98,7 +98,7 @@
                                         <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
                                         {% if isInscrit and (sortie.etat.libelle in ['Ouverte','Clôturée']) %}
                                             <span> - </span>
-                                            <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Se désister</a>
+                                            <a href="{# TODO uncomment when route will be create {{ path('sorties_desister', { 'id' : sortie.id }) }}  #}">Se désister</a>
                                         {% endif %}
                                         {% if (not isInscrit and (sortie.assosPartiSort.count < sortie.nbInscriptionsMax))
                                             and (sortie.dateHeureDebut > date())
@@ -107,10 +107,10 @@
                                             <a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a>
                                         {% endif %}
                                     {% else %}
-                                        <a href="{{ path('sorties_modifier', { 'id' : sortie.id }) }}">Modifier</a>
+                                        <a href="{# TODO uncomment when route will be create {{ path('sorties_modifier', { 'id' : sortie.id }) }}  #}">Modifier</a>
                                         {% if date() < sortie.dateHeureDebut %}
                                             <span> - </span>
-                                            <a href="{{ path('sorties_publier', { 'id' : sortie.id }) }}">Publier</a>
+                                            <a href="{# TODO uncomment when route will be create {{ path('sorties_publier', { 'id' : sortie.id }) }} #}">Publier</a>
                                         {% endif %}
                                     {% endif %}
                                 </td>
@@ -129,7 +129,7 @@
         </section>
         <section>
             <p>
-                <button class="button-blue"><a href="{{ path('sorties_creer', { 'id' : sortie.id }) }}" class="a-text-white">Créer une sortie</a></button>
+                <button class="button-blue"><a href="{# TODO uncomment when route will be create {{ path('sorties_creer') }} #}" class="a-text-white">Créer une sortie</a></button>
             </p>
         </section>
     </div>
