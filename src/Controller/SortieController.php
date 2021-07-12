@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\BO\Annuler;
 use App\Entity\AssosPartiSort;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\AnnulerType;
 use App\Form\FiltrerType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -88,7 +90,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository , LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager,SerializerInterface $serializer,Request $request): Response
+    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer, Request $request): Response
     {
         $sortie = new Sortie();
         $organisateur = $this->getUser();
@@ -135,7 +137,7 @@ class SortieController extends AbstractController
             // A modifier et rediriger vers la visualisation de sortie détail
             return $this->redirectToRoute('sortie_liste_sorties');
         }
-    //TODO mettre en place le javascript pour modifier les rue code postal et autres
+        //TODO mettre en place le javascript pour modifier les rue code postal et autres
 
 //        $villesJSON = $this->json($villeRepository->findAll(), 200, [], ['groups' =>'group_ville' ]);
 //
@@ -162,11 +164,11 @@ class SortieController extends AbstractController
         $assosPartiSort = new AssosPartiSort();
         $sortie = $sortieRepository->find($id);
         $assosPartiSort->setSortie($sortie)
-                        ->setParticipant($this->getUser());
+            ->setParticipant($this->getUser());
 
         //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
         //Alors on peut ajouter le participant à la liste des inscrits
-       /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
+        /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
         //Vérifier si le participant existe déjà avec une requête
         //findOneBy (where)
 
@@ -185,8 +187,8 @@ class SortieController extends AbstractController
 
 
     #[Route('/sorties/{id}', name: 'consulter_desister')]
-    public function desister ($id
-                                ): Response
+    public function desister($id
+    ): Response
 
     {
         //On peut se désister si inscrit && dateDebut < dateDuJour
@@ -205,17 +207,55 @@ class SortieController extends AbstractController
                                   EntityManagerInterface $em): Response
     {
         $sortie = $sortieRepository->find($id);
-        $etatFutur = $etatRepository->findOneByLibelle('En Création');
-
         $organisateur = $this->getUser();
 
-        if ($sortie->getOrganisateur()->getUsername() == $organisateur->getUsername()) {
-            $sortie->setEtat($etatFutur);
-            $em->persist($sortie);
-            $em->flush();
-            $this->addFlash('success','Sortie annulée, son état est mis à : En Création');
+        //cancel a Sortie is allow only for the organisateur
+        //the Sortie must not have started : the Etat must be Ouverte or Clôturée
+        if ($sortie->getOrganisateur()->getUsername() == $organisateur->getUsername()
+            && ($sortie->getEtat()->getLibelle() === 'Ouverte'
+                || $sortie->getEtat()->getLibelle() === 'Clôturée')) {
+
+            $annuler = new Annuler();
+            $annulerForm = $this->createForm(AnnulerType::class, $annuler);
+            $annulerForm->handleRequest($request);
+            //form is submitted
+            if ($annulerForm->isSubmitted()) {
+                if ($annulerForm->isValid() && $annulerForm->get('enregistrer')->isClicked()) {
+                    //try to protect against overflow
+                    try {
+                        //add motif at the beginning of infosSortie
+                        $sortie->setInfosSortie(
+                            "*** Annulée pour le motif : " . $annuler->getMotif() . " *** " . $sortie->getInfosSortie());
+                        //etat
+                        $etatFutur = $etatRepository->findOneByLibelle('Annulée');
+                        $sortie->setEtat($etatFutur);
+
+                        //persist
+                        $em->persist($sortie);
+                        $em->flush();
+                        //flash message and return
+                        $this->addFlash('success', 'Sortie annulée, son état est mis à : Annulée');
+                    }catch (\Exception $e){
+                        //flash message and return
+                        $this->addFlash('error', 'Action non réalisable, le texte est trop long');
+                        //perhaps some logs one day ?
+                    }
+                    //whatever the result is : redirect to list of Sortie
+                    return $this->redirectToRoute('sortie_liste_sorties');
+                }
+                //if action cancel is cancelled
+                if ($annulerForm->get('annuler')->isClicked()){
+                    return $this->redirectToRoute('sortie_liste_sorties');
+                }
+            }
+            //no submit, just show the twig page with empty form
+            return $this->render('sortie/annuler-sortie.html.twig', [
+                'annulerForm' => $annulerForm->createView(),
+                'sortie' => $sortie,
+            ]);
         }
 
+        //if route is accessed by someone else than the organisateur, just redirect to list of Sortie
         return $this->redirectToRoute('sortie_liste_sorties');
     }
 
