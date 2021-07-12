@@ -1,0 +1,168 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height:100vh;
+}
+main {
+    background: #F5F5F5;
+    min-height: 500px;
+    padding:1em;
+    margin:0;
+}
+
+#nav-logo {
+    height:100px;
+    padding:1em;
+}
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    display: block;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.nodisc {
+    list-style-type: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.li-footer {
+    padding-top:0.25em;
+}
+
+.navbar{
+    padding-right: 5px;
+}
+
+.button{
+    text-decoration: none;
+    color:black;
+}
+
+.button-blue{
+    background: linear-gradient(127deg,#4b67f6,#3ca6fc);
+    border:2px inset #3ca6fc;
+    padding:12px 24px;
+    color:white;
+}
+
+.button-blue:hover {
+    background: linear-gradient(336deg,#4b67f6,#3ca6fc);
+    border:2px outset #3ca6fc;
+}
+
+.a-text-white{
+    text-decoration: none;
+    color:white;
+}
+
+.padding1em {
+    padding:1em;
+}
+
+.padding2em {
+    padding:2em;
+}
+
+#footer {
+    text-align:center;
+    margin-bottom: 20px;
+}
+
+#table-sorties{
+    border:2px outset #3ca6fc;
+    border-collapse: collapse;
+}
+
+#table-sorties thead{
+    background: linear-gradient(127deg,#4b67f6,#3ca6fc);
+}
+
+#table-sorties th{
+    padding:5px 10px;
+    border:1px solid #4b67f6;
+}
+
+#table-sorties td{
+    padding:5px 10px;
+    border:1px solid #4b67f6;
+}
+#table-sorties .striped{
+    background: #DDDDDD;
+}
+
+.flash {
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin: 1rem 0;
+    border-radius: 5px;
+    color: #132135;
+}
+
+.flash-success {
+    background-color: lawngreen
+}
+
+.flash-error {
+    background-color: red
+}
+
+.box-shad{
+    box-shadow: 0 0 0.2em #3ca6fc, 0 0 0.2em #3ca6fc;
+}
+
+.text-white{
+    color:white;
+}
+
+.plus-button {
+    border: 2px solid lightgrey;
+    background-color: #fff;
+    font-size: 16px;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 999px;
+    position: relative;
+
+        &:after,
+        &:before {
+             content: "";
+             display: block;
+             background-color: grey;
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+         },
+
+        &:before {
+             height: 1em;
+             width: 0.2em;
+         }
+
+        &:after {
+             height: 0.2em;
+             width: 1em;
+         }
+    }
+
+#div-fix-height{
+    height:400px;
+    max-height: 400px;
+    overflow: auto;
+}

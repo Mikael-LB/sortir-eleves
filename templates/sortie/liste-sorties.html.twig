@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <h1>Liste des sorties</h1>
+        <section>
+            <span>Date du jour : {{ "now" | date('d/m/Y') }}</span>
+            <span>{{ app.user.nom }} {{ app.user.prenom }}</span>
+        </section>
+        <section>
+            <h2>Filtrer les sorties</h2>
+            <div class="box-shad">
+                {{ form_start(filtrerForm) }}
+                <div class="flex space-between">
+                    <div class="flex-column padding1em">
+                        <div>
+                            {{ form_label(filtrerForm.campus) }}
+                            {{ form_widget(filtrerForm.campus) }}
+                            {{ form_errors(filtrerForm.campus) }}
+                        </div>
+                        <div>
+                            {{ form_label(filtrerForm.nom) }}
+                            {{ form_widget(filtrerForm.nom) }}
+                            {{ form_errors(filtrerForm.nom) }}
+                        </div>
+                        <div>
+                            <span>Entre :</span>
+                            {{ form_widget(filtrerForm.dateHeureDebut) }}
+                            {{ form_errors(filtrerForm.dateHeureDebut) }}
+                            <span> et </span>
+                            {{ form_widget(filtrerForm.dateHeureFin) }}
+                            {{ form_errors(filtrerForm.dateHeureFin) }}
+                        </div>
+                    </div>
+                    <div class="flex-column padding1em">
+                        <div>
+                            {{ form_widget(filtrerForm.isOrganisateur) }}
+                            {{ form_label(filtrerForm.isOrganisateur) }}
+                            {{ form_errors(filtrerForm.isOrganisateur) }}
+                        </div>
+                        <div>
+                            {{ form_widget(filtrerForm.isInscrit) }}
+                            {{ form_label(filtrerForm.isInscrit) }}
+                            {{ form_errors(filtrerForm.isInscrit) }}
+                        </div>
+                        <div>
+                            {{ form_widget(filtrerForm.notInscrit) }}
+                            {{ form_label(filtrerForm.notInscrit) }}
+                            {{ form_errors(filtrerForm.notInscrit) }}
+                        </div>
+                        <div>
+                            {{ form_widget(filtrerForm.oldSorties) }}
+                            {{ form_label(filtrerForm.oldSorties) }}
+                            {{ form_errors(filtrerForm.oldSorties) }}
+                        </div>
+                    </div>
+                    <div class="flex-column padding2em">
+                        <button class="button-blue">Rechercher</button>
+                    </div>
+                    {{ form_end(filtrerForm) }}
+                </div>
+        </section>
+        <section>
+            <h2>Résultat du filtre</h2>
+            <div id="div-fix-height">
+                <table id="table-sorties">
+                    <thead>
+                    <tr class="text-white">
+                        <th>Nom de la sortie</th>
+                        <th>Date de la sortie</th>
+                        <th>Clôture</th>
+                        <th>inscrits / places</th>
+                        <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set striped = false %}
+                    {% set isInscrit = false %}
+                    {% for sortie in sorties %}
+                        {% if sortie.etat.libelle != "Historisée" %}
+                            <tr {% if striped %} class="striped" {% endif %}>
+                                <td>{{ sortie.nom }}</td>
+                                <td>{{ sortie.dateHeureDebut | date('d/M/Y h:m') }}</td>
+                                <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
+                                <td>{{ sortie.assosPartiSort | length }} / {{ sortie.nbInscriptionsMax }}</td>
+                                <td>{{ sortie.etat.libelle }}</td>
+                                <td>{% for inscrit in sortie.assosPartiSort %}
+                                        {% if app.user.id == inscrit.participant.id %}
+                                            {% set isInscrit = true %}
+                                            X{% endif %}
+                                    {% endfor %} </td>
+                                <td>{{ sortie.organisateur.pseudo }}</td>
+                                <td>
+                                    {% if sortie.etat.libelle != "En Création" %}
+                                        <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
+                                        {% if isInscrit and (sortie.etat.libelle in ['Ouverte','Clôturée']) %}
+                                            <span> - </span>
+                                            <a href="{# TODO uncomment when route will be create {{ path('sorties_desister', { 'id' : sortie.id }) }}  #}">Se désister</a>
+                                        {% endif %}
+                                        {% if (not isInscrit and (sortie.assosPartiSort.count < sortie.nbInscriptionsMax))
+                                            and (sortie.dateHeureDebut > date())
+                                            and (sortie.etat.libelle == "Ouverte" ) %}
+                                            <span> - </span>
+                                            <a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="{# TODO uncomment when route will be create {{ path('sorties_modifier', { 'id' : sortie.id }) }}  #}">Modifier</a>
+                                        {% if date() < sortie.dateHeureDebut %}
+                                            <span> - </span>
+                                            <a href="{# TODO uncomment when route will be create {{ path('sorties_publier', { 'id' : sortie.id }) }} #}">Publier</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% set isInscrit = false %}
+                            {% if striped %}
+                                {% set striped = false %}
+                            {% else %}
+                                {% set striped = true %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section>
+            <p>
+                <button class="button-blue"><a href="{# TODO uncomment when route will be create {{ path('sorties_creer') }} #}" class="a-text-white">Créer une sortie</a></button>
+            </p>
+        </section>
+    </div>
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | liste des sorties
+{% endblock %}
+

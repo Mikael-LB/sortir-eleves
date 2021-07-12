@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}|Editer son profil
+{% endblock %}
+
+{% block body %}
+    <h2>Mon profil</h2>
+    <div>
+        {{ form_start(participantForm) }}
+        {{ form_widget(participantForm) }}
+        <button class="button-blue">Enregister</button>
+        {{ form_end(participantForm) }}
+
+    </div>
+{% endblock %}
+
