@@ -5,72 +5,95 @@
 {% endblock %}
 
 {% block body %}
-<h2>Création d'une sortie</h2>
+    <h2>Création d'une sortie</h2>
 
     {{ form_start(sortieForm) }}
-    <div>
-    {{ form_row(sortieForm.nom) }}
+    <div class="flex-column">
 
-    </div>
-    <div>
-        {{ field_label(sortieForm.dateHeureDebut) }}
-        {{ form_widget(sortieForm.dateHeureDebut) }}
-        {{ form_errors(sortieForm.dateHeureDebut) }}
-{#    {{ form_row(sortieForm.dateHeureDebut) | date("d/m/Y") }}#}
 
-    </div>
-    <div>
-        {{ field_label(sortieForm.dateLimiteInscription) }}
-        {{ form_widget(sortieForm.dateLimiteInscription) }}
-        {{ form_errors(sortieForm.dateLimiteInscription) }}
-{#    {{ form_row(sortieForm.dateLimiteInscription) | date("d/m/Y")  }}#}
+        <div class="flex">
 
-    </div>
-    <div>
-    {{ form_row(sortieForm.nbInscriptionsMax) }}
+                <div>
+            <div class="block">
+                    {{ field_label(sortieForm.nom) }}
+                    {{ form_widget(sortieForm.nom) }}
+                    {{ form_errors(sortieForm.nom) }}
+                </div>
 
-    </div>
-    <div>
-    {{ form_row(sortieForm.duree) }}
+                <div class="block">
+                    {{ field_label(sortieForm.dateHeureDebut) }}
+                    {{ form_widget(sortieForm.dateHeureDebut) }}
+                    {{ form_errors(sortieForm.dateHeureDebut) }}
+                </div>
+                <div class="block">
+                    {{ field_label(sortieForm.dateLimiteInscription) }}
+                    {{ form_widget(sortieForm.dateLimiteInscription) }}
+                    {{ form_errors(sortieForm.dateLimiteInscription) }}
+                </div>
+                <div class="block">
+                    {{ field_label(sortieForm.nbInscriptionsMax) }}
+                    {{ form_widget(sortieForm.nbInscriptionsMax) }}
+                    {{ form_errors(sortieForm.nbInscriptionsMax) }}
+                </div>
+                <div class="block">
+                    {{ field_label(sortieForm.duree) }}
+                    {{ form_widget(sortieForm.duree) }}
+                    {{ form_errors(sortieForm.duree) }}
+                </div>
+                <div class="block">
+                    {{ field_label(sortieForm.infosSortie) }}
+                    {{ form_widget(sortieForm.infosSortie) }}
+                    {{ form_errors(sortieForm.infosSortie) }}
+                </div>
+            </div>
 
-    </div>
-    <div>
-    {{ form_row(sortieForm.infosSortie) }}
-
-    </div>
-    <div>
-    Campus : {{ campus }}
-
-    </div>
-    <div>
-    {{ form_row(sortieForm.Ville) }}
-
-    </div>
-    <div>
-    <div>
-        {{ field_label(sortieForm.Lieu) }}
-        {{ form_widget(sortieForm.Lieu) }}
-        {{ form_errors(sortieForm.Lieu) }}
-{#        <a href="{{ path('lieu_creer') }}">➕</a>#}
-        {{ form_widget(sortieForm.plus) }}
-{#        <a href="{{ path('lieu_creer') }}"><button class="plus-button">➕</button>  </a>#}
-    </div>
-        <div>
-        <label for="rue">Rue :</label><input id="rue" type="text" readonly>
         </div>
-        <div>
-        <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
-        </div>
-        <div>
-        <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
-        </div>
-        <div>
-        <label for="longitude">longitude :</label><input id="longitude" type="text" readonly>
+
+        <div class="flex">
+
+
+            <div  class="block">
+                <p>
+                    Campus : {{ campus }}
+                </p>
+            </div>
+            <div class="block">
+                {{ field_label(sortieForm.Ville) }}
+                {{ form_widget(sortieForm.Ville) }}
+                {{ form_errors(sortieForm.Ville) }}
+            </div>
+            <div class="block">
+                <div>
+                    {{ field_label(sortieForm.Lieu) }}
+                    {{ form_widget(sortieForm.Lieu) }}
+                    {{ form_errors(sortieForm.Lieu) }}
+                    <a href="{{ path('lieu_creer') }}"><img class="plus-button"
+                                                            src="{{ asset('images/front-office/menu-items/plusImage.png') }}"
+                                                            alt="image d'un plus"> </a>
+                </div>
+                <div class="block">
+                    <label for="rue">Rue :</label><input id="rue" type="text" readonly>
+                </div>
+                <div class="block">
+                    <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
+                </div>
+                <div class="block">
+                    <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
+                </div>
+                <div class="block">
+                    <label for="longitude">longitude :</label><input id="longitude" type="text" readonly>
+                </div>
+            </div>
         </div>
     </div>
-{#    {{ form_widget(sortieForm) }}#}
-    <button class="button button-blue">Envoyer</button>
-    {{ form_end(sortieForm) }}
+    <div>
+        {{ form_widget(sortieForm.enregistrer) }}
+        {{ form_widget(sortieForm.publier) }}
+        {{ form_end(sortieForm) }}
+    </div>
+    <a href="{{ path('sortie_liste_sorties') }}">
+        <button>Annuler</button>
+    </a>
 
 {% endblock %}
 

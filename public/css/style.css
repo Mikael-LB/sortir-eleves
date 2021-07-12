@@ -122,6 +122,14 @@ main {
     background-color: red
 }
 
+.box-shad{
+    box-shadow: 0 0 0.2em #3ca6fc, 0 0 0.2em #3ca6fc;
+}
+
+.text-white{
+    color:white;
+}
+
 .plus-button {
     border: 2px solid lightgrey;
     background-color: #fff;

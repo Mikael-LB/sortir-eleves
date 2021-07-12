@@ -7,8 +7,6 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ButtonBuilder;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -58,9 +56,6 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
                 'mapped' => false,
-            ])
-            ->add('plus', SubmitType::class,[
-                'label' => '➕',
             ])
             ->add('enregistrer', SubmitType::class,[
                 'label' => 'Enregistrer sans publier'

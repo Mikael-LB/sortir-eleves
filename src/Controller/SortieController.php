@@ -7,11 +7,9 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
 use App\Entity\Sortie;
-use App\Entity\Campus;
 use App\Entity\Ville;
 use App\Form\FiltrerType;
 use App\Form\SortieType;
-use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
@@ -31,27 +29,18 @@ class SortieController extends AbstractController
                                  EtatRepository $etatRepository,
                                  ParticipantRepository $participantRepository): Response
     {
-
-        //$sorties = $sortieRepository->findAll();
-        /*$sortie = new Sortie();
-        $sortie->setNom('Philo')
-            ->setDateHeureDebut(new \DateTime('now'))
-            ->setDateLimiteInscription(new \DateTime('now + 2 day'))
-            ->setNbInscriptionsMax(8)
-            ->setEtat($etatRepository->find(1))
-            ->setOrganisateur($participantRepository->find(1));
-        $sorties = [$sortie];*/
+        //initial fill with all results
         $sorties = $sortieRepository->findAll();
-
-
 
         $filtrer = new Filtrer();
         $filtrerForm = $this->createForm(FiltrerType::class,$filtrer);
         $filtrerForm->handleRequest($request);
 
         if($filtrerForm->isSubmitted() && $filtrerForm->isValid()){
+            $participant = $this->getUser();
+            //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
             $filtrer = $filtrerForm->getData();
-            $sorties = $sortieRepository->findForFilterForm($filtrer);
+            $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
         }
 
         return $this->render('sortie/liste-sorties.html.twig', [
@@ -61,7 +50,7 @@ class SortieController extends AbstractController
     }
 
 
-    #[Route('/sorties/consulter/{id}', name: 'sorties_consulter')]
+    #[Route('/sorties/consulter/{id}', name: 'sorties_consulter', requirements:['id'=>'\d+'])]
     public function consulter($id,
                               SortieRepository $sortieRepository,
                                 LieuRepository $lieuRepository,
@@ -99,7 +88,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, CampusRepository $campusRepository, EtatRepository $etatRepository ,EntityManagerInterface $entityManager,Request $request): Response
+    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository ,EntityManagerInterface $entityManager,Request $request): Response
     {
         $sortie = new Sortie();
         $organisateur = $this->getUser();
@@ -107,11 +96,9 @@ class SortieController extends AbstractController
          * @var $organisateur Participant
          */
         $sortie->setOrganisateur($organisateur);
-//        $campus = $campusRepository->find($organisateur->getCampus());
-        $campusId = $organisateur->getCampus()->getId();
-        $campus = $campusRepository->find($campusId);
         $sortie->setCampus($organisateur->getCampus());
         $sortie->setEtat($etatRepository->findOneByLibelle(['En Création']));
+
 
         $sortieForm = $this->createForm(SortieType::class,$sortie);
 
@@ -126,23 +113,20 @@ class SortieController extends AbstractController
 //        dd($sortieForm->isSubmitted());
 //        dd($sortieForm->isValid());
 
-if ($sortieForm->isSubmitted()){
-dd($sortieForm->get('plus')->getData());
-
-}
-//            dd($sortieForm->get('plus')->isSubmitted());
-        if($sortieForm->getClickedButton() ){
-            return $this->redirectToRoute('lieu_creer');
-        }
-//
-//        if( $sortieForm->get('plus')->isSubmitted()){
-//            return $this->redirectToRoute('lieu_creer');
-//        }
-
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
+//            dd('publier' == ($sortieForm->getClickedButton()->getConfig()->getName()));
+
+            if ('publier' == ($sortieForm->getClickedButton()->getConfig()->getName())){
+                $sortie->setEtat($etatRepository->findOneByLibelle(['Ouverte']));
+
+            }
+
+            ($sortie->getEtat())->addSorty($sortie);
+            $entityManager->persist(($sortie->getEtat()));
             $entityManager->persist($sortie);
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Sortie créée avec Succès');

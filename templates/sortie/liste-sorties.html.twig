@@ -9,10 +9,10 @@
         </section>
         <section>
             <h2>Filtrer les sorties</h2>
-            <div>
+            <div class="box-shad">
                 {{ form_start(filtrerForm) }}
-                <div class="flex">
-                    <div class="flex-column">
+                <div class="flex space-between">
+                    <div class="flex-column padding1em">
                         <div>
                             {{ form_label(filtrerForm.campus) }}
                             {{ form_widget(filtrerForm.campus) }}
@@ -32,34 +32,30 @@
                             {{ form_errors(filtrerForm.dateHeureFin) }}
                         </div>
                     </div>
-                    <div class="flex">
-                        <div class="flex-column">
-                            <div>
+                    <div class="flex-column padding1em">
+                        <div>
                             {{ form_widget(filtrerForm.isOrganisateur) }}
                             {{ form_label(filtrerForm.isOrganisateur) }}
                             {{ form_errors(filtrerForm.isOrganisateur) }}
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                             {{ form_widget(filtrerForm.isInscrit) }}
                             {{ form_label(filtrerForm.isInscrit) }}
                             {{ form_errors(filtrerForm.isInscrit) }}
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                             {{ form_widget(filtrerForm.notInscrit) }}
                             {{ form_label(filtrerForm.notInscrit) }}
                             {{ form_errors(filtrerForm.notInscrit) }}
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                             {{ form_widget(filtrerForm.oldSorties) }}
                             {{ form_label(filtrerForm.oldSorties) }}
                             {{ form_errors(filtrerForm.oldSorties) }}
-                            </div>
                         </div>
                     </div>
-                    <div class="flex">
-                        <div class="flex-column">
-                            <button class="button-blue">Rechercher</button>
-                        </div>
+                    <div class="flex-column padding2em">
+                        <button class="button-blue">Rechercher</button>
                     </div>
                     {{ form_end(filtrerForm) }}
                 </div>
@@ -68,7 +64,7 @@
             <h2>Résultat du filtre</h2>
             <table id="table-sorties">
                 <thead>
-                <tr>
+                <tr class="text-white">
                     <th>Nom de la sortie</th>
                     <th>Date de la sortie</th>
                     <th>Clôture</th>
@@ -81,6 +77,7 @@
                 </thead>
                 <tbody>
                 {% set striped = false %}
+                {% set isInscrit = false %}
                 {% for sortie in sorties %}
                     <tr {% if striped %} class="striped" {% endif %}>
                         <td>{{ sortie.nom }}</td>
@@ -88,11 +85,21 @@
                         <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
                         <td>{{ sortie.assosPartiSort | length }} / {{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
-                        <td>{% if app.user == sortie.organisateur %}X{% endif %}</td>
+                        <td>{% for inscrit in sortie.assosPartiSort %}
+                                {% if app.user.id == inscrit.participant.id %}
+                                    {% set isInscrit = true %}
+                                    X{% endif %}
+                            {% endfor %} </td>
                         <td>{{ sortie.organisateur.pseudo }}</td>
-                        <td><a href="{{ path('sorties_consulter',{'id': sortie.id}) }}" title=" détails de la sortie">Afficher</a>
-                            <a href="{{ path('sorties_inscrire',{'id': sortie.id}) }}" title=" S'inscrire à la sortie">S'inscrire</a></td>
+                        <td>
+                            <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
+                            {% if isInscrit %}
+                                <span> - </span>
+                                <a href="">Se désister</a>
+                            {% endif %}
+                        </td>
                     </tr>
+                    {% set isInscrit = false %}
                     {% if striped %}
                         {% set striped = false %}
                     {% else %}
