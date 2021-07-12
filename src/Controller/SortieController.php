@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SortieController extends AbstractController
 {
@@ -88,7 +89,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository ,EntityManagerInterface $entityManager,Request $request): Response
+    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository , LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager,SerializerInterface $serializer,Request $request): Response
     {
         $sortie = new Sortie();
         $organisateur = $this->getUser();
@@ -98,6 +99,7 @@ class SortieController extends AbstractController
         $sortie->setOrganisateur($organisateur);
         $sortie->setCampus($organisateur->getCampus());
         $sortie->setEtat($etatRepository->findOneByLibelle(['En Création']));
+//        $villes = $villeRepository->findAll();
 
 
         $sortieForm = $this->createForm(SortieType::class,$sortie);
@@ -134,10 +136,17 @@ class SortieController extends AbstractController
             // A modifier et rediriger vers la visualisation de sortie détail
             return $this->redirectToRoute('sortie_liste_sorties');
         }
+    //TODO mettre en place le javascript pour modifier les rue code postal et autres
+
+//        $villesJSON = $this->json($villeRepository->findAll(), 200, [], ['groups' =>'group_ville' ]);
+//
+//        $villesSerialize = $serializer->serialize($villes, 'json', ['groups' =>'group_ville']);
+//        dd($villes, $villesJSON,$villesSerialize);
 
         return $this->render('sortie/creer-sortie.html.twig', [
             'sortieForm' => $sortieForm->createView(),
             'campus' => $sortie->getCampus()->getNom(),
+//            'villes' => $villes,
 
         ]);
 

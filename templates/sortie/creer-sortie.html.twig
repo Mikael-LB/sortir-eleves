@@ -75,7 +75,7 @@
                     <label for="rue">Rue :</label><input id="rue" type="text" readonly>
                 </div>
                 <div class="block">
-                    <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
+                    <label for="codePostal">Code Postal :</label><p id="codePostal" type="text"></p>
                 </div>
                 <div class="block">
                     <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
@@ -94,6 +94,50 @@
     <a href="{{ path('sortie_liste_sorties') }}">
         <button>Annuler</button>
     </a>
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+
+    window.onload = init;
+    function init(){
+
+    let inputRue =document.getElementById('rue');
+    let inputCodePostal =document.getElementById('codePostal');
+    let inputLatitude =document.getElementById('latitude');
+    let inputLongitude =document.getElementById('longitude');
+
+    let selectVille =document.getElementById('sortie_Ville');
+    let selectLieu = document.getElementById('sortie_Lieu');
+
+    let testTab = [inputRue, inputCodePostal, inputLatitude, inputLongitude, selectLieu, selectVille];
+    let vilLog =[1, 2];
+
+    selectVille.addEventListener('click', function (){
+
+    inputCodePostal.innerHTML = "Gillet près de Normand-la-Forêt";
+
+    });
+
+    //
+    // document.querySelector('villes').forEach(function (elem){
+    // console.log(elem.toString());
+    // });
+    {#let villeCP = {'ville_cp' : '{{ villes.codePostal }}'}#}
+
+    console.log(testTab);
+
+    {#console.log({{ villes }});#}
+
+
+
+
+    }
+
+
+</script>
+
 
 {% endblock %}
 
