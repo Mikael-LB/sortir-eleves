@@ -60,16 +60,15 @@ class ParticipantController extends AbstractController
 //            }catch (Exception $exception){
 //
 //            }
-//            if (
-//                 $participantFrom->get('plainPassword')->getData() !== null){
-//
-//            $encodedPassword = $passwordEncoder->encodePassword(
-//                $participant,
-//                $participantFrom->get('plainPassword')->getData()
-//            );
-//
-//            $participant->setPassword($encodedPassword);
-//            }
+            if ($participantFrom->get('plainPassword')->getData() !== null){
+
+            $encodedPassword = $passwordEncoder->encodePassword(
+                $participant,
+                $participantFrom->get('plainPassword')->getData()
+            );
+
+            $participant->setPassword($encodedPassword);
+            }
 
 
 

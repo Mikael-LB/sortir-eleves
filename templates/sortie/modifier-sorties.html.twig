@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ parent() }}|créer une Sortie
+    {{ parent() }}|modifier sortie
 {% endblock %}
 
 {% block body %}
-    <h2>Création d'une sortie</h2>
+<h2>Modifier votre Sortie</h2>
+
 
     {{ form_start(sortieForm) }}
     <div class="flex-column">
@@ -13,8 +14,8 @@
 
         <div class="flex">
 
-                <div>
-            <div class="block">
+            <div>
+                <div class="block">
                     {{ field_label(sortieForm.nom) }}
                     {{ form_widget(sortieForm.nom) }}
                     {{ form_errors(sortieForm.nom) }}
@@ -89,55 +90,12 @@
     <div>
         {{ form_widget(sortieForm.enregistrer) }}
         {{ form_widget(sortieForm.publier) }}
+        {{ form_widget(sortieForm.supprimer) }}
         {{ form_end(sortieForm) }}
     </div>
     <a href="{{ path('sortie_liste_sorties') }}">
         <button>Annuler</button>
     </a>
-
-{% endblock %}
-
-{% block javascripts %}
-<script type="text/javascript">
-
-    window.onload = init;
-    function init(){
-
-    let inputRue =document.getElementById('rue');
-    let inputCodePostal =document.getElementById('codePostal');
-    let inputLatitude =document.getElementById('latitude');
-    let inputLongitude =document.getElementById('longitude');
-
-    let selectVille =document.getElementById('sortie_Ville');
-    let selectLieu = document.getElementById('sortie_Lieu');
-
-    let testTab = [inputRue, inputCodePostal, inputLatitude, inputLongitude, selectLieu, selectVille];
-    let vilLog =[1, 2];
-
-    selectVille.addEventListener('click', function (){
-
-    inputCodePostal.innerHTML = "Gillet près de Normand-la-Forêt";
-
-    });
-
-    //
-    // document.querySelector('villes').forEach(function (elem){
-    // console.log(elem.toString());
-    // });
-    {#let villeCP = {'ville_cp' : '{{ villes.codePostal }}'}#}
-
-    console.log(testTab);
-
-    {#console.log({{ villes }});#}
-
-
-
-
-    }
-
-
-</script>
-
 
 {% endblock %}
 
