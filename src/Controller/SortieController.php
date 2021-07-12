@@ -11,6 +11,7 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\AnnulerType;
 use App\Form\FiltrerType;
+use App\Form\SortieModifierType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
@@ -106,18 +107,17 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
 
         $sortieForm->handleRequest($request);
-        $dataLieu = $sortieForm->get('Lieu')->getData();
-
-        $sortie->setLieu($dataLieu);
-        $dataVille = $sortieForm->get('Ville')->getData();
-
-
-//        dd($sortie);
-//        dd($sortieForm->isSubmitted());
-//        dd($sortieForm->isValid());
-
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+
+        $dataLieu = $sortieForm->get('Lieu')->getData();
+        $sortie->setLieu($dataLieu);
+        /**
+         * @var $dataLieu Lieu
+         */
+        $dataLieu->addSorty($sortie);
+        $entityManager->persist($dataLieu);
+        $dataVille = $sortieForm->get('Ville')->getData();
 
 //            dd('publier' == ($sortieForm->getClickedButton()->getConfig()->getName()));
 
@@ -257,6 +257,65 @@ class SortieController extends AbstractController
 
         //if route is accessed by someone else than the organisateur, just redirect to list of Sortie
         return $this->redirectToRoute('sortie_liste_sorties');
+    }
+
+    #[Route('/sorties/modifier/{id}', name: 'sorties_modifier', requirements: ['id' => '\d+'])]
+    public function modifierSortie(int $id, SortieRepository $sortieRepository,EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request) :Response{
+
+        $sortie = $sortieRepository->find($id);
+
+        if ( ($sortie->getEtat()->getLibelle() != 'En Création') || ($sortie->getOrganisateur() != $this->getUser()) ){
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }
+
+
+        $sortieForm = $this->createForm(SortieModifierType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if($sortieForm->isSubmitted()){
+
+        $dataLieu = $sortieForm->get('Lieu')->getData();
+        if ($dataLieu !== null){
+        $sortie->setLieu($dataLieu);
+        /**
+         * @var $dataLieu Lieu
+         */
+        $dataLieu->addSorty($sortie);
+        $entityManager->persist($dataLieu);
+        }
+        $dataVille = $sortieForm->get('Ville')->getData();
+        if ($sortieForm->isSubmitted() && 'supprimer' == ($sortieForm->getClickedButton()->getConfig()->getName())){
+            $etatSortie =$sortie->getEtat();
+            $etatSortie->removeSorty($sortie);
+            $entityManager->persist($etatSortie);
+            $entityManager->remove($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Sortie supprimée avec Succès');
+
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if ('publier' == ($sortieForm->getClickedButton()->getConfig()->getName())) {
+                $sortie->setEtat($etatRepository->findOneByLibelle(['Ouverte']));
+            }
+            ($sortie->getEtat())->addSorty($sortie);
+            $entityManager->persist(($sortie->getEtat()));
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Sortie modifiée avec Succès');
+
+            // A modifier et rediriger vers la visualisation de sortie détail
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }
+        }
+
+        return $this->render('sortie/modifier-sorties.html.twig',[
+            'sortieForm' => $sortieForm->createView(),
+            'campus' => $sortie->getCampus()->getNom(),
+    ]);
     }
 
 }

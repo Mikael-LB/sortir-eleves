@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SortieType extends AbstractType
+class SortieModifierType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -43,8 +43,6 @@ class SortieType extends AbstractType
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description et infos :'
             ])
-//            ->add('campus')
-//            ->add('lieu')
             ->add('Ville', EntityType::class,[
                 'label' => 'Ville :',
                 'class' => Ville::class,
@@ -61,19 +59,13 @@ class SortieType extends AbstractType
                 'label' => 'Enregistrer sans publier'
             ])
             ->add('publier', SubmitType::class,[
-                'label' => 'Publier',
+                'label' => 'Publier'
+            ])
+            ->add('supprimer', SubmitType::class,[
+                'label' => 'Supprimer la sortie',
             ])
         ;
-
-
     }
-//
-//    public function buildButton(ButtonBuilder $builder, array $options){
-//        $builder->add('PLUS-BUTTON', ButtonType::class, [
-//            'label' => '➕'
-//        ])
-//            ;
-//    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
