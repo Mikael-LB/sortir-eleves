@@ -26,9 +26,11 @@ class AnnulerType extends AbstractType
             ])
             ->add('enregistrer',SubmitType::class,[
                 'label'=>'Enregistrer',
+                'attr'=>['class'=>'button-blue',],
             ])
             ->add('annuler',SubmitType::class,[
                 'label'=>'Annuler',
+                'attr'=>['class'=>'button-blue',],
             ])
         ;
     }
