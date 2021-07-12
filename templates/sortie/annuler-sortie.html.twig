@@ -2,13 +2,51 @@
 
 {% block body %}
     <h1>Annuler une sortie</h1>
-    <p>Nom de la sortie : {{ sortie.nom }}</p>
-    <p>Date de la sortie : {{ sortie.dateHeureDebut | date('d-m-Y') }}</p>
-    <p>Campus : {{ sortie.campus.nom }}</p>
-    <p>Lieu : {{ sortie.lieu.nom }}</p>
-    {{ form_start(annulerForm) }}
-    {{ form_widget(annulerForm) }}
-    {{ form_end(annulerForm) }}
+    <section>
+        <table id="table-annuler" class="box-shad">
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="td40 text-right">Nom de la sortie :</td>
+                <td>{{ sortie.nom }}</td>
+            </tr>
+            <tr>
+                <td class="td40 text-right">Date de la sortie :</td>
+                <td>{{ sortie.dateHeureDebut | date('d-m-Y') }}</td>
+            </tr>
+            <tr>
+                <td class="td40 text-right">Campus :</td>
+                <td>{{ sortie.campus.nom }}</td>
+            </tr>
+            <tr>
+                <td class="td40 text-right">Lieu :</td>
+                <td>{{ sortie.lieu.nom }}</td>
+            </tr>
+            <tr>
+                {{ form_start(annulerForm) }}
+                <td class="td40 text-right">
+                    {{ form_label(annulerForm.motif) }}
+                </td>
+                <td>
+                    {{ form_widget(annulerForm.motif) }}
+                    {{ form_errors(annulerForm.motif) }}
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td class="text-center">
+                    {{ form_widget(annulerForm.enregistrer) }}
+                </td>
+                <td class="text-center">
+                    {{ form_widget(annulerForm.annuler) }}
+                </td>
+            </tr>
+            </tfoot>
+            {{ form_end(annulerForm) }}
+        </table>
+    </section>
 {% endblock %}
 
 {% block title %}

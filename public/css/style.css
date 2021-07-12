@@ -166,3 +166,32 @@ main {
     max-height: 400px;
     overflow: auto;
 }
+
+h1 {
+    text-align:center;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+    margin:0 auto;
+}
+
+#table-annuler{
+    border-collapse: collapse;
+    width:50%;
+    margin:0 auto;
+}
+
+#table-annuler td{
+    padding:1em 10px;
+}
+
+.td40 {
+    width:40%;
+}
+
+.text-center{
+    text-align:center;
+}
+
+.text-right{
+    text-align: right;
+}
