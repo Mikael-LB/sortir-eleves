@@ -192,7 +192,7 @@ dd($sortieForm->get('plus')->getData());
     }
 
 
-    #[Route('/sorties/{id}', name: 'consulter_desister')]
+    #[Route('/sorties/desister/{id}', name: 'consulter_desister')]
     public function desister ($id
                                 ): Response
 
