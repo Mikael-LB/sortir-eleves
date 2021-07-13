@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
+use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,6 +88,24 @@ class ParticipantController extends AbstractController
             'participantForm' => $participantFrom->createView()
         ]);
 
+
+    }
+
+    #[Route('/participant/afficher/{id}', name: 'participant_afficher')]
+    public function afficher($id,
+                             ParticipantRepository $participantRepository,
+                             CampusRepository $campusRepository): Response{
+        //Afficher les détails concernant un participant
+        $participant = $participantRepository->find($id);
+
+    $campus = new Campus();
+    $campus->setNom('Nantes');
+    $campus = $campusRepository->find($id);
+
+        return $this->render('participant/afficher.html.twig',[
+            'participant'=>$participant,
+            'campus'=>$campus
+        ]);
 
     }
 
