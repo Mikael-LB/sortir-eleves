@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
+use App\BO\Annuler;
 use App\Entity\AssosPartiSort;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\BO\Filtrer;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\AnnulerType;
 use App\Form\FiltrerType;
 use App\Form\SortieModifierType;
 use App\Form\SortieType;
+use App\Repository\AssosPartiSortRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
@@ -75,21 +78,22 @@ class SortieController extends AbstractController
 
         $participant = new Participant();
         $participant->setNom('Stasia')
-            ->setPseudo('st');
+                    ->setPseudo('st');
         $participants = [$participant];
-        // $participant = $participantRepository->find($id);
+       // $participant = $participantRepository->find($id);
+
 
 
         return $this->render('consulter/consulter-sorties.html.twig', [
             'sortie' => $sortie,
             'lieu' => $lieu,
-            'ville' => $ville,
-            'participants' => $participants
+            'ville'=> $ville,
+            'participants'=> $participants
         ]);
     }
 
     #[Route('/sorties/creer', name: 'sortie_creer')]
-    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository , LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager,SerializerInterface $serializer,Request $request): Response
+    public function creerSortie(SortieRepository $sortieRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer, Request $request): Response
     {
         $sortie = new Sortie();
         $organisateur = $this->getUser();
@@ -119,7 +123,7 @@ class SortieController extends AbstractController
 
 //            dd('publier' == ($sortieForm->getClickedButton()->getConfig()->getName()));
 
-            if ('publier' == ($sortieForm->getClickedButton()->getConfig()->getName())) {
+            if ('publier' == ($sortieForm->getClickedButton()->getConfig()->getName())){
                 $sortie->setEtat($etatRepository->findOneByLibelle(['Ouverte']));
 
             }
@@ -135,7 +139,7 @@ class SortieController extends AbstractController
             // A modifier et rediriger vers la visualisation de sortie détail
             return $this->redirectToRoute('sortie_liste_sorties');
         }
-    //TODO mettre en place le javascript pour modifier les rue code postal et autres
+        //TODO mettre en place le javascript pour modifier les rue code postal et autres
 
 //        $villesJSON = $this->json($villeRepository->findAll(), 200, [], ['groups' =>'group_ville' ]);
 //
@@ -151,52 +155,84 @@ class SortieController extends AbstractController
 
     }
 
-
     #[Route('/sorties/inscrire/{id}', name: 'sorties_inscrire')]
     public function inscrire($id,
                              SortieRepository $sortieRepository,
-                             EntityManagerInterface $entityManager
-    ): Response
-        //Accéder à s'inscrire
+                             EntityManagerInterface $entityManager,
+                             AssosPartiSortRepository $assosPartiSortRepository): Response
     {
-        $assosPartiSort = new AssosPartiSort();
+
+        //Je recherche une sortie(une instance potentiellement déjà existante) par sa clé primaire (id)
         $sortie = $sortieRepository->find($id);
-        $assosPartiSort->setSortie($sortie)
-                        ->setParticipant($this->getUser());
+        $inscription = $assosPartiSortRepository->findOneBy(['sortie' => $sortie,
+            'participant' => $this->getUser()]);
+        //Je vérifie si dans ma base de données il existe déjà un inscrit à une sortie donnée c-à-d si la combinaison sortie et participant existe déjà
+        if ($inscription) {
+            $this->addFlash('pas possible', 'Vous êtes déjà inscrit à cette sortie');
+         return $this->redirectToRoute('sortie_liste_sorties');
 
-        //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
-        //Alors on peut ajouter le participant à la liste des inscrits
-       /* if ($etatOuverte && $dateLimiteInscription < CURRENT_DATE() && nbInscrit < nbInscriptionsMax ) */
-        //Vérifier si le participant existe déjà avec une requête
-        //findOneBy (where)
-
-
-        //j'ajoute l'instance à l'objet Sortie
-        $sortie->addAssosPartiSort($assosPartiSort);
-        $entityManager->persist($sortie);
-        $entityManager->persist($assosPartiSort);
-        $entityManager->flush();
-
-        return $this->render('inscrire/inscrire-sorties.html.twig', [
-            'sortie' => $sortie,
-
-        ]);
+        } else {
+            //Si la sortie Etat = ouverte et dateDuJour > dateLimiteInscription et nbInscrits < nbInscriptionsMax
+            if ($sortie->getEtat()->getLibelle() == 'Ouverte'
+                && $sortie->getDateLimiteInscription() > new \DateTime()
+                && $sortie->getNbInscriptionsMax() > count($sortie->getAssosPartiSort()))
+            {
+                //Je crée une nouvelle instance d'AssosPartiSort
+                $assosPartiSort = new AssosPartiSort();
+                //Je récupère les informations des attributs sorttie et participant de assosPartiSort
+                $assosPartiSort->setSortie($sortie)
+                    ->setParticipant($this->getUser());
+                //j'ajoute l'instance à l'objet Sortie
+                $sortie->addAssosPartiSort($assosPartiSort);
+                $entityManager->persist($sortie);
+                $entityManager->persist($assosPartiSort);
+                $entityManager->flush();
+                return $this->render('inscrire/inscrire-sorties.html.twig', [
+                    'sortie' => $sortie,
+                ]);
+            }else{
+                $this->addFlash('impossible','plus de places ou datelimite dépassée ou sortie fermée');
+              return $this->redirectToRoute('sortie_liste_sorties');
+            }
+        }
     }
 
 
-    #[Route('/sorties/{id}', name: 'consulter_desister')]
-    public function desister ($id
-                                ): Response
+    /*$sortie->getEtat()->$etatRepository->findOneByLib('ouverte');
+           //findBy([libelle =>'ouverte'])
+           //OU $var = $sortie->getEtat();
+           $var2 = $var->getLibelle();
+           $var2 == 'Ouverte'*/
+
+
+    #[Route('/sorties/desister/{id}', name: 'sorties_desister')]
+    public function desister($id, SortieRepository $sortieRepository,
+                            EntityManagerInterface $entityManager,
+    AssosPartiSortRepository $assosPartiSortRepository
+    ): Response
 
     {
-        //On peut se désister si inscrit && dateDebut < dateDuJour
-        //nombre de places libre +1
+        //Je recherche une sortie(une instance potentiellement déjà existante) par sa clé primaire (id)
+        $sortie = $sortieRepository->find($id);
+        $inscription = $assosPartiSortRepository->findOneBy(['sortie' => $sortie,
+            'participant' => $this->getUser()]);
+        //Je vérifie si dans ma base de données il existe déjà un inscrit à une sortie donnée c-à-d si la combinaison sortie et participant existe déjà
+        if ($inscription && $sortie->getDateHeureDebut() > new \DateTime()) {
 
-        return $this->render('sortie/liste-sorties.html.twig', [
+            //Je crée une nouvelle instance d'AssosPartiSort
+            $assosPartiSort = new AssosPartiSort();
+            //Je récupère les informations des attributs sortie et participant de assosPartiSort
+            $assosPartiSort->setSortie($sortie)
+                ->setParticipant($this->getUser());
+            $entityManager->remove($assosPartiSortRepository);
+            $this->addFlash('OK','Vous êtes désinscrit à cette sortie');
 
-        ]);
+            return $this->render('inscrire/inscrire-sorties.html.twig', [
+                'sortie' => $sortie,
+            ]);
+        }
+
     }
-
     #[Route('/sorties/annuler/{id}', name: 'sorties_annuler', requirements: ['id' => '\d+'])]
     public function annulerSortie(int $id,
                                   Request $request,
@@ -205,17 +241,55 @@ class SortieController extends AbstractController
                                   EntityManagerInterface $em): Response
     {
         $sortie = $sortieRepository->find($id);
-        $etatFutur = $etatRepository->findOneByLibelle('En Création');
-
         $organisateur = $this->getUser();
 
-        if ($sortie->getOrganisateur()->getUsername() == $organisateur->getUsername()) {
-            $sortie->setEtat($etatFutur);
-            $em->persist($sortie);
-            $em->flush();
-            $this->addFlash('success','Sortie annulée, son état est mis à : En Création');
+        //cancel a Sortie is allow only for the organisateur
+        //the Sortie must not have started : the Etat must be Ouverte or Clôturée
+        if ($sortie->getOrganisateur()->getUsername() == $organisateur->getUsername()
+            && ($sortie->getEtat()->getLibelle() === 'Ouverte'
+                || $sortie->getEtat()->getLibelle() === 'Clôturée')) {
+
+            $annuler = new Annuler();
+            $annulerForm = $this->createForm(AnnulerType::class, $annuler);
+            $annulerForm->handleRequest($request);
+            //form is submitted
+            if ($annulerForm->isSubmitted()) {
+                if ($annulerForm->isValid() && $annulerForm->get('enregistrer')->isClicked()) {
+                    //try to protect against overflow
+                    try {
+                        //add motif at the beginning of infosSortie
+                        $sortie->setInfosSortie(
+                            "*** Annulée pour le motif : " . $annuler->getMotif() . " *** " . $sortie->getInfosSortie());
+                        //etat
+                        $etatFutur = $etatRepository->findOneByLibelle('Annulée');
+                        $sortie->setEtat($etatFutur);
+
+                        //persist
+                        $em->persist($sortie);
+                        $em->flush();
+                        //flash message and return
+                        $this->addFlash('success', 'Sortie annulée, son état est mis à : Annulée');
+                    }catch (\Exception $e){
+                        //flash message and return
+                        $this->addFlash('error', 'Action non réalisable, le texte est trop long');
+                        //perhaps some logs one day ?
+                    }
+                    //whatever the result is : redirect to list of Sortie
+                    return $this->redirectToRoute('sortie_liste_sorties');
+                }
+                //if action cancel is cancelled
+                if ($annulerForm->get('annuler')->isClicked()){
+                    return $this->redirectToRoute('sortie_liste_sorties');
+                }
+            }
+            //no submit, just show the twig page with empty form
+            return $this->render('sortie/annuler-sortie.html.twig', [
+                'annulerForm' => $annulerForm->createView(),
+                'sortie' => $sortie,
+            ]);
         }
 
+        //if route is accessed by someone else than the organisateur, just redirect to list of Sortie
         return $this->redirectToRoute('sortie_liste_sorties');
     }
 

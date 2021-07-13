@@ -28,6 +28,13 @@
     <p>longitude: {{ sortie.lieu.longitude }}</p>
     <br>
 
+    <a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a>
+
+
+    <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Désister</a>
+
+
+
     <h2>Liste des participants inscrits</h2>
 
     <table>
@@ -44,7 +51,6 @@
                 <td>{{ assosPartiSort.participant.nom }}</td>
                 <td>{{ assosPartiSort.participant.pseudo }}</td>
             </tr>
-
 
         {% endfor %}
 
