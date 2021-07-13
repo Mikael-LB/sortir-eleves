@@ -39,12 +39,13 @@ class SortieController extends AbstractController
 
         $filtrer = new Filtrer();
         $filtrerForm = $this->createForm(FiltrerType::class, $filtrer);
+
         $filtrerForm->handleRequest($request);
 
         if ($filtrerForm->isSubmitted() && $filtrerForm->isValid()) {
             $participant = $this->getUser();
             //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
-            $filtrer = $filtrerForm->getData();
+            //$filtrer = $filtrerForm->getData();
             $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
         }
 
