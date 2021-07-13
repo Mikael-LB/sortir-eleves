@@ -92,7 +92,7 @@
                                             {% set isInscrit = true %}
                                             X{% endif %}
                                     {% endfor %} </td>
-                                <td>{{ sortie.organisateur.pseudo }}</td>
+                                <td><a href="{{ path('participant_afficher', { 'id' : sortie.id }) }}">{{ sortie.organisateur.pseudo }}</a></td>
                                 <td>
                                     {% if sortie.etat.libelle != "En Création" %}
                                         <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>

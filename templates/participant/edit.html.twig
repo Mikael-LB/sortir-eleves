@@ -6,12 +6,17 @@
 
 {% block body %}
     <h2>Mon profil</h2>
-    <div>
-        {{ form_start(participantForm) }}
-        {{ form_widget(participantForm) }}
-        <button class="button-blue">Enregister</button>
-        {{ form_end(participantForm) }}
+    <div class="flex">
+        <div>
+            <img class="img-profil" src="{{ asset('images/profils/' ~ participant.urlImage ) }}" alt="{{ participant.pseudo }}">
+        </div>
+        <div>
+            {{ form_start(participantForm) }}
+            {{ form_widget(participantForm) }}
+            <button class="button-blue">Enregister</button>
+            {{ form_end(participantForm) }}
 
+        </div>
     </div>
 {% endblock %}
 
