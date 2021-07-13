@@ -38,12 +38,10 @@
     {% endfor %}
 
 
-
-
-
     <h2>Liste des participants inscrits</h2>
 
-    <table>
+    <div id="tableau-participants">
+    <table id="tableau">
         <thead>
         <tr>
             <th>Pseudo</th>
@@ -51,7 +49,6 @@
 
         </tr>
         </thead>
-
         <tbody>
         {% for assosPartiSort in sortie.assosPartiSort %}
             <tr>
@@ -63,6 +60,7 @@
 
         </tbody>
     </table>
+    </div>
 
 {% endblock %}
 

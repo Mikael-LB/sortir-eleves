@@ -99,6 +99,7 @@ class ParticipantController extends AbstractController
 
     }
 
+    //Méthode permettant d'afficher les informations des participants
     #[Route('/participant/afficher/{id}', name: 'participant_afficher')]
     public function afficher($id,
                              ParticipantRepository $participantRepository,

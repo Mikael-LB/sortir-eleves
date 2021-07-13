@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {# Vue permettant d'afficher les informations concernant un participant, méthode afficher du participantCntroller #}
     <h2>{{ participant.pseudo }}</h2>
     <p>Prenom: {{ participant.prenom }}</p>
     <p>Nom: {{ participant.nom }}</p>
@@ -8,6 +9,7 @@
     <p>Email: {{ participant.email }}</p>
     <p>Campus: {{ participant.campus.nom }}</p>
 
+    {# Lien permettant de rediriger vers la page d'accueil: page de la liste des sorties #}
     <a href="{{ path('sortie_liste_sorties', { 'id' : participant.id }) }}">Retour</a>
 
 {% endblock %}
