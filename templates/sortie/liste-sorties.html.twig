@@ -98,7 +98,7 @@
                                         <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
                                         {% if isInscrit and (sortie.etat.libelle in ['Ouverte','Clôturée']) %}
                                             <span> - </span>
-                                            <a href="{# TODO uncomment when route will be create {{ path('sorties_desister', { 'id' : sortie.id }) }} #}">Se désister</a>
+                                            <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Se désister</a>
                                         {% endif %}
                                         {% if sortie.organisateur.id == app.user.id and (sortie.etat.libelle in ['Ouverte','Clôturée']) %}
                                             <span> - </span>
