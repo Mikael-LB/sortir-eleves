@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UpdateSortiesCommand extends Command
 {
-    protected static $defaultName = 'UpdateSortiesCommand';
+    protected static $defaultName = 'app:update-sorties';
     protected static $defaultDescription = 'Change l\'Etat des sortie en fonction de la date du jour';
     private $archivageSorties;
 
