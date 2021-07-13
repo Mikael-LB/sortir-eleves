@@ -187,9 +187,11 @@ class SortieController extends AbstractController
                 $entityManager->persist($sortie);
                 $entityManager->persist($assosPartiSort);
                 $entityManager->flush();
-                return $this->render('inscrire/inscrire-sorties.html.twig', [
+                   $this->addFlash('possible','Vous êtes inscrit');
+                /*return $this->render('sortie/liste-sorties.html.twig', [
                     'sortie' => $sortie,
-                ]);
+                ]);*/
+                return $this->redirectToRoute('sortie_liste_sorties');
             }else{
                 $this->addFlash('impossible','plus de places ou datelimite dépassée ou sortie fermée');
               return $this->redirectToRoute('sortie_liste_sorties');
@@ -217,22 +219,17 @@ class SortieController extends AbstractController
         $inscription = $assosPartiSortRepository->findOneBy(['sortie' => $sortie,
             'participant' => $this->getUser()]);
         //Je vérifie si dans ma base de données il existe déjà un inscrit à une sortie donnée c-à-d si la combinaison sortie et participant existe déjà
-        if ($inscription && $sortie->getDateHeureDebut() > new \DateTime()) {
-
-            //Je crée une nouvelle instance d'AssosPartiSort
-            $assosPartiSort = new AssosPartiSort();
-            //Je récupère les informations des attributs sortie et participant de assosPartiSort
-            $assosPartiSort->setSortie($sortie)
-                ->setParticipant($this->getUser());
-            $entityManager->remove($assosPartiSortRepository);
-            $this->addFlash('OK','Vous êtes désinscrit à cette sortie');
-
-            return $this->render('inscrire/inscrire-sorties.html.twig', [
-                'sortie' => $sortie,
-            ]);
+        if ($inscription  && $sortie->getDateHeureDebut() > new \DateTime()) {
+            $entityManager->remove($inscription);
+            $entityManager->flush();
+            $this->addFlash('OK', 'Vous êtes désinscrit de cette sortie');
         }
+        return $this->redirectToRoute('sortie_liste_sorties');
 
     }
+
+
+
     #[Route('/sorties/annuler/{id}', name: 'sorties_annuler', requirements: ['id' => '\d+'])]
     public function annulerSortie(int $id,
                                   Request $request,
