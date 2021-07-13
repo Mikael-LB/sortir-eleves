@@ -21,6 +21,9 @@ class FiltrerType extends AbstractType
             ->add('campus', EntityType::class,[
                 'class'=>Campus::class,
                 'choice_label'=>'nom',
+                'empty_data'=>null,
+                'placeholder'=>'',
+                'required'=>false,
             ])
             ->add('nom', TextType::class,[
                 'label' => 'Le nom de la sortie contient',
@@ -30,13 +33,11 @@ class FiltrerType extends AbstractType
                 'html5'=>true,
                 'widget'=>'single_text',
                 'required'=>false,
-                'mapped'=>false,
             ])
             ->add('dateHeureFin', DateType::class,[
                 'html5'=>true,
                 'widget'=>'single_text',
                 'required'=>false,
-                'mapped'=>false,
             ])
             ->add('isOrganisateur', CheckboxType::class, [
                 'label'=>'Sorties dont je suis l\'organisateur/trice',

@@ -11,11 +11,12 @@ class Filtrer
 {
     /**
      * @var Campus
-     * @Assert\NotNull(message="Ne peut être vide")
+     * @Assert\Type("App\Entity\Campus")
      */
     private $campus;
     /**
      * @var string
+     * @Assert\Type("string")
      * @Assert\Length (max="50", maxMessage="Recherche limitée à 50 caractères")
      */
     private $nom;
@@ -79,7 +80,7 @@ class Filtrer
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): self
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -91,7 +92,7 @@ class Filtrer
         return $this->dateHeureFin;
     }
 
-    public function setDateHeureFin(\DateTimeInterface $dateHeureFin): self
+    public function setDateHeureFin(?\DateTimeInterface $dateHeureFin): self
     {
         $this->dateHeureFin = $dateHeureFin;
 
