@@ -49,8 +49,9 @@
         <tbody>
         {% for assosPartiSort in sortie.assosPartiSort %}
             <tr>
-                <td><a href="{{ path('participant_afficher', { 'id' : participant.id }) }}">{{ assosPartiSort.participant.nom }}</a></td>
+                {# <td><a href="{{ path('participant_afficher', { 'id' : participant.id }) }}">{{ assosPartiSort.participant.pseudo }}</a></td> #}
                 <td>{{ assosPartiSort.participant.pseudo }}</td>
+                <td>{{ assosPartiSort.participant.nom }}</td>
             </tr>
 
         {% endfor %}
