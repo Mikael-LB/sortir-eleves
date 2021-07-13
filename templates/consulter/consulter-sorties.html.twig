@@ -42,13 +42,14 @@
         <tr>
             <th>Pseudo</th>
             <th>Nom</th>
+
         </tr>
         </thead>
 
         <tbody>
         {% for assosPartiSort in sortie.assosPartiSort %}
             <tr>
-                <td>{{ assosPartiSort.participant.nom }}</td>
+                <td><a href="{{ path('participant_afficher', { 'id' : participant.id }) }}">{{ assosPartiSort.participant.nom }}</a></td>
                 <td>{{ assosPartiSort.participant.pseudo }}</td>
             </tr>
 
