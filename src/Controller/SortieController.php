@@ -195,8 +195,10 @@ class SortieController extends AbstractController
         $sortie = $sortieRepository->find($id);
         $inscription = $assosPartiSortRepository->findOneBy(['sortie' => $sortie,
             'participant' => $this->getUser()]);
+
         //Je vérifie si dans ma base de données il existe déjà un inscrit à une sortie donnée c-à-d si la combinaison sortie et participant existe déjà
-        if ($inscription  && $sortie->getDateHeureDebut() > new \DateTime()) {
+        if ($inscription  && ($sortie->getDateHeureDebut() > new \DateTime())) {
+
             $entityManager->remove($inscription);
             $entityManager->flush();
             $this->addFlash('OK', 'Vous êtes désinscrit de cette sortie');
