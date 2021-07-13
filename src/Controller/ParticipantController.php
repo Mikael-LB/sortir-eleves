@@ -63,9 +63,11 @@ class ParticipantController extends AbstractController
 
             //Upload image
             $urlImage = $participantFrom->get('urlImage')->getData();
-            $dir = $this->getParameter('upload_image_profil_dir');
-            $filename=$uploadImage->save($participant->getNom(),$urlImage,$dir);
-            $participant->setUrlImage($filename);
+            if (isset($urlImage)) {
+                $dir = $this->getParameter('upload_image_profil_dir');
+                $filename = $uploadImage->save($participant->getNom(), $urlImage, $dir);
+                $participant->setUrlImage($filename);
+            }
             //
 
             if ($participantFrom->get('plainPassword')->getData() !== null) {
@@ -91,7 +93,7 @@ class ParticipantController extends AbstractController
         dump(4);
         return $this->render('participant/edit.html.twig', [
             'participantForm' => $participantFrom->createView(),
-            'participant'=>$participant,
+            'participant' => $participant,
         ]);
 
 
