@@ -99,6 +99,7 @@ class ParticipantController extends AbstractController
 
     }
 
+    //Méthode permettant d'afficher les informations des participants
     #[Route('/participant/afficher/{id}', name: 'participant_afficher')]
     public function afficher($id,
                              ParticipantRepository $participantRepository,
@@ -106,13 +107,9 @@ class ParticipantController extends AbstractController
         //Afficher les détails concernant un participant
         $participant = $participantRepository->find($id);
 
-    $campus = new Campus();
-    $campus->setNom('Nantes');
-    $campus = $campusRepository->find($id);
-
         return $this->render('participant/afficher.html.twig',[
             'participant'=>$participant,
-            'campus'=>$campus
+
         ]);
 
     }

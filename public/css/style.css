@@ -167,6 +167,13 @@ main {
     overflow: auto;
 }
 
+#tableau-participants{
+    height: 100px;
+    max-height: 100px;
+    width:400px;
+    overflow: auto;
+}
+
 h1 {
     text-align:center;
     padding-bottom: 0.5em;
