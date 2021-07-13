@@ -75,7 +75,8 @@
                     <label for="rue">Rue :</label><input id="rue" type="text" readonly>
                 </div>
                 <div class="block">
-                    <label for="codePostal">Code Postal :</label><p id="codePostal" type="text"></p>
+{#                    <label for="codePostal">Code Postal :</label><p id="codePostal" type="text"></p>#}
+                    <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
                 </div>
                 <div class="block">
                     <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
@@ -103,32 +104,60 @@
     window.onload = init;
     function init(){
 
+
+        // On récupère nos éléments à modifier
     let inputRue =document.getElementById('rue');
     let inputCodePostal =document.getElementById('codePostal');
     let inputLatitude =document.getElementById('latitude');
     let inputLongitude =document.getElementById('longitude');
-
+        // On récupère nos select à écouter
     let selectVille =document.getElementById('sortie_Ville');
     let selectLieu = document.getElementById('sortie_Lieu');
 
     let testTab = [inputRue, inputCodePostal, inputLatitude, inputLongitude, selectLieu, selectVille];
-    let vilLog =[1, 2];
 
-    selectVille.addEventListener('click', function (){
+    // On ajoute l'event listener de Ville
+    selectVille.addEventListener('change', function (){
 
-    inputCodePostal.innerHTML = "Gillet près de Normand-la-Forêt";
+        let dataVille ={'ville_id' : selectVille.value};
+
+        // Objet XMLHttpRequest
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "{{ path('ville_ajax_select') }}");
+        xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+        xmlhttp.onload = function (){
+            // inputCodePostal.innerHTML = this.responseText;
+
+            dataVille = JSON.parse((this.responseText));
+            inputCodePostal.removeAttribute('readonly');
+            inputCodePostal.setAttribute('value', dataVille.codePostalAjax);
+            inputCodePostal.setAttribute('readonly', '');
+
+            // inputRue.removeAttribute('readonly');
+            // inputRue.setAttribute('value', dataVille.listeLieux);
+            // inputRue.setAttribute('readonly', '');
+
+
+        }
+        xmlhttp.send(JSON.stringify(dataVille));
+
+
+        {#// Appel Ajax avec Fetch#}
+        {#fetch('{{ path('ville_ajax_select') }}', {method : 'POST', body : JSON.stringify(dataVille)} )#}
+        {#    .then(function (response){ //c'est la promesse#}
+        {#        return response.json();#}
+        {#    })#}
+        {#    .then(function (dataVille){#}
+        {#        console.log(dataVille);#}
+        {#        inputCodePostal.innerHTML = dataVille.codePostalAjax;#}
+        {#    });#}
+
+
 
     });
 
-    //
-    // document.querySelector('villes').forEach(function (elem){
-    // console.log(elem.toString());
-    // });
-    {#let villeCP = {'ville_cp' : '{{ villes.codePostal }}'}#}
 
-    console.log(testTab);
 
-    {#console.log({{ villes }});#}
 
 
 
