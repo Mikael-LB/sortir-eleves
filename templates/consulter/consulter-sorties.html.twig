@@ -30,8 +30,14 @@
 
     <a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a>
 
+    {% for inscrit in sortie.assosPartiSort %}
+    {% if app.user.id == inscrit.participant.id %}
+    {% set isncrit = true %}
+        <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Désister</a>
+    {% endif %}
+    {% endfor %}
 
-    <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Désister</a>
+
 
 
 
@@ -49,8 +55,7 @@
         <tbody>
         {% for assosPartiSort in sortie.assosPartiSort %}
             <tr>
-                {# <td><a href="{{ path('participant_afficher', { 'id' : participant.id }) }}">{{ assosPartiSort.participant.pseudo }}</a></td> #}
-                <td>{{ assosPartiSort.participant.pseudo }}</td>
+                <td><a href="{{ path('participant_afficher', { 'id' : assosPartiSort.participant.id }) }}">{{ assosPartiSort.participant.pseudo }}</a></td>
                 <td>{{ assosPartiSort.participant.nom }}</td>
             </tr>
 

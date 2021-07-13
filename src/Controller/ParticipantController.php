@@ -106,13 +106,9 @@ class ParticipantController extends AbstractController
         //Afficher les détails concernant un participant
         $participant = $participantRepository->find($id);
 
-    $campus = new Campus();
-    $campus->setNom('Nantes');
-    $campus = $campusRepository->find($id);
-
         return $this->render('participant/afficher.html.twig',[
             'participant'=>$participant,
-            'campus'=>$campus
+
         ]);
 
     }

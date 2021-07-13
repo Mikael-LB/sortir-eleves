@@ -56,39 +56,15 @@ class SortieController extends AbstractController
 
 
     #[Route('/sorties/consulter/{id}', name: 'sorties_consulter', requirements: ['id' => '\d+'])]
-    public function consulter($id,
-                              SortieRepository $sortieRepository,
-                              LieuRepository $lieuRepository,
-                              VilleRepository $villeRepository,
-                              ParticipantRepository $participantRepository): Response
+    public function consulter($id, SortieRepository $sortieRepository): Response
     {
-
         //Afficher les détails concernant une sortie
         $sortie = $sortieRepository->find($id);
-
-        $lieu = new Lieu();
-        $lieu->setNom('RennesCentre')
-            ->setRue('Albert')
-            ->setLatitude(4)
-            ->setLongitude(5);
-        $lieu = $lieuRepository->find($id);
-
-        $ville = new Ville();
-        $ville->setCodePostal(35000);
-
-        $participant = new Participant();
-        $participant->setNom('Stasia')
-                    ->setPseudo('st');
-        $participants = [$participant];
-       // $participant = $participantRepository->find($id);
-
 
 
         return $this->render('consulter/consulter-sorties.html.twig', [
             'sortie' => $sortie,
-            'lieu' => $lieu,
-            'ville'=> $ville,
-            'participants'=> $participants
+
         ]);
     }
 
