@@ -17,21 +17,25 @@ class Ville
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"group_ville"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups ({"group_ville"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups ({"group_ville"})
      */
     private $codePostal;
 
     /**
      * @ORM\OneToMany(targetEntity=Lieu::class, mappedBy="ville", orphanRemoval=true)
+     * @Groups ({"group_ville"})
      */
     private $lieux;
 
