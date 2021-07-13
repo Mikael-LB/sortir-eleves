@@ -195,3 +195,7 @@ h1 {
 .text-right{
     text-align: right;
 }
+
+.img-profil{
+    max-width: 100px;
+}

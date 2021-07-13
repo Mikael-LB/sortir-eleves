@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Utils\UploadImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,12 @@ class ParticipantController extends AbstractController
 //    #[Route('/participant/{id}', name: 'participant_editer', requirements: ["id" => "\d+"])]
 
     #[Route('/participant/{id}', name: 'participant_editer', requirements: ["id" => "\d+"])]
-    public function editer(int $id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function editer(int $id,
+                           ParticipantRepository $participantRepository,
+                           EntityManagerInterface $entityManager,
+                           Request $request,
+                           UserPasswordEncoderInterface $passwordEncoder,
+                           UploadImage $uploadImage): Response
     {
 //        $emailParticipantEntrant = $this->getUser()->getUsername();
 //
@@ -42,8 +48,8 @@ class ParticipantController extends AbstractController
 
         $participant = $participantRepository->find($id);
 
-        if($participant != $this->getUser()){
-            return $this->redirectToRoute('participant_editer',['id'=>$this->getUser()->getId()]);
+        if ($participant != $this->getUser()) {
+            return $this->redirectToRoute('participant_editer', ['id' => $this->getUser()->getId()]);
         }
 
         $participantFrom = $this->createForm(ParticipantType::class, $participant);
@@ -51,39 +57,39 @@ class ParticipantController extends AbstractController
         $participantFrom->handleRequest($request);
 
         dump(2);
-        if($participantFrom->isSubmitted() && $participantFrom->isValid()){
+        if ($participantFrom->isSubmitted() && $participantFrom->isValid()) {
 
-            //TODO faire une fonction pour Uploader une photo de profil
-////
-//            try {
-//
-//            }catch (Exception $exception){
-//
-//            }
-            if ($participantFrom->get('plainPassword')->getData() !== null){
+            //Upload image
+            $urlImage = $participantFrom->get('urlImage')->getData();
+            $dir = $this->getParameter('upload_image_profil_dir');
+            $filename=$uploadImage->save($participant->getNom(),$urlImage,$dir);
+            $participant->setUrlImage($filename);
+            //
 
-            $encodedPassword = $passwordEncoder->encodePassword(
-                $participant,
-                $participantFrom->get('plainPassword')->getData()
-            );
+            if ($participantFrom->get('plainPassword')->getData() !== null) {
 
-            $participant->setPassword($encodedPassword);
+                $encodedPassword = $passwordEncoder->encodePassword(
+                    $participant,
+                    $participantFrom->get('plainPassword')->getData()
+                );
+
+                $participant->setPassword($encodedPassword);
             }
-
 
 
             $entityManager->persist($participant);
             $entityManager->flush();
 
-            $this->addFlash('success','Profil modifié avec Succès');
+            $this->addFlash('success', 'Profil modifié avec Succès');
 
-        dump(3);
+            dump(3);
             return $this->redirectToRoute('sortie_liste_sorties');
         }
 
         dump(4);
         return $this->render('participant/edit.html.twig', [
-            'participantForm' => $participantFrom->createView()
+            'participantForm' => $participantFrom->createView(),
+            'participant'=>$participant,
         ]);
 
 
