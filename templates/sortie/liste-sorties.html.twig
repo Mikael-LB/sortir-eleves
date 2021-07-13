@@ -92,7 +92,7 @@
                                             {% set isInscrit = true %}
                                             X{% endif %}
                                     {% endfor %} </td>
-                                <td><a href="{{ path('participant_afficher', { 'id' : sortie.id }) }}">{{ sortie.organisateur.pseudo }}</a></td>
+                                <td><a href="{{ path('participant_afficher', { 'id' : sortie.organisateur.id }) }}">{{ sortie.organisateur.pseudo }}</a></td>
                                 <td>
                                     {% if sortie.etat.libelle != "En Création" %}
                                         <a href="{{ path('sorties_consulter', { 'id' : sortie.id }) }}">Afficher</a>
@@ -134,7 +134,7 @@
         <section>
             <p>
                 <button class="button-blue"><a
-                            href="{# TODO uncomment when route will be create {{ path('sorties_creer') }} #}"
+                            href="{{ path('sortie_creer') }}"
                             class="a-text-white">Créer une sortie</a></button>
             </p>
         </section>

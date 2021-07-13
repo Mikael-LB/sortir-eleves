@@ -29,10 +29,14 @@ class FiltrerType extends AbstractType
             ->add('dateHeureDebut', DateType::class,[
                 'html5'=>true,
                 'widget'=>'single_text',
+                'required'=>false,
+                'mapped'=>false,
             ])
             ->add('dateHeureFin', DateType::class,[
                 'html5'=>true,
                 'widget'=>'single_text',
+                'required'=>false,
+                'mapped'=>false,
             ])
             ->add('isOrganisateur', CheckboxType::class, [
                 'label'=>'Sorties dont je suis l\'organisateur/trice',
