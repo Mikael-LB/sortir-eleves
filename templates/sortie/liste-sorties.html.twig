@@ -83,8 +83,8 @@
                         {% if sortie.etat.libelle != "Historisée" %}
                             <tr {% if striped %} class="striped" {% endif %}>
                                 <td>{{ sortie.nom }}</td>
-                                <td>{{ sortie.dateHeureDebut | date('d/M/Y h:m') }}</td>
-                                <td>{{ sortie.dateLimiteInscription | date('d/M/Y h:m') }}</td>
+                                <td>{{ sortie.dateHeureDebut | date('d/m/Y h:m') }}</td>
+                                <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:m') }}</td>
                                 <td>{{ sortie.assosPartiSort | length }} / {{ sortie.nbInscriptionsMax }}</td>
                                 <td>{{ sortie.etat.libelle }}</td>
                                 <td>{% for inscrit in sortie.assosPartiSort %}
