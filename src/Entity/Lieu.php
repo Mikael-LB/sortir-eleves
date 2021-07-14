@@ -17,31 +17,31 @@ class Lieu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"group_ville"})
+     * @Groups ({"group_ville", "group_lieu"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"group_ville"})
+     * @Groups ({"group_ville", "group_lieu"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"group_ville"})
+     * @Groups ({"group_ville", "group_lieu"})
      */
     private $rue;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups ({"group_ville"})
+     * @Groups ({"group_ville", "group_lieu"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups ({"group_ville"})
+     * @Groups ({"group_ville", "group_lieu"})
      */
     private $longitude;
 
@@ -53,6 +53,7 @@ class Lieu
     /**
      * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups ({"group_lieu"})
      */
     private $ville;
 

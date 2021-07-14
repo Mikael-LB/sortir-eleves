@@ -94,8 +94,118 @@
         {{ form_end(sortieForm) }}
     </div>
     <a href="{{ path('sortie_liste_sorties') }}">
-        <button>Annuler</button>
+        <button class="button-blue">Annuler</button>
     </a>
 
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript">
+
+        window.onload = init;
+        function init(){
+
+
+            // On récupère nos éléments à modifier
+            let inputRue =document.getElementById('rue');
+            let inputCodePostal =document.getElementById('codePostal');
+            let inputLatitude =document.getElementById('latitude');
+            let inputLongitude =document.getElementById('longitude');
+            // On récupère nos select à écouter
+            let selectVille =document.getElementById('sortie_modifier_Ville');
+            let selectLieu = document.getElementById('sortie_modifier_Lieu');
+
+            let testTab = [inputRue, inputCodePostal, inputLatitude, inputLongitude, selectLieu, selectVille];
+
+            // On ajoute l'event listener de Ville
+            selectVille.addEventListener('change', function (){
+
+                let dataVille ={'ville_id' : selectVille.value};
+
+                // Objet XMLHttpRequest
+                let xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "{{ path('ville_ajax_select') }}");
+                xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+                xmlhttp.onload = function (){
+
+                    // On récupère le code postal de la ville et rempli le champ associé
+                    dataVille = JSON.parse((this.responseText));
+                    inputCodePostal.removeAttribute('readonly');
+                    inputCodePostal.setAttribute('value', dataVille.codePostalAjax);
+                    inputCodePostal.setAttribute('readonly', '');
+
+                    // On récupère la rue du premier lieu associé à cette ville et rempli le champ associé
+                    inputRue.removeAttribute('readonly');
+                    inputRue.setAttribute('value', dataVille.LieuRue);
+                    inputRue.setAttribute('readonly', '');
+
+                    // On récupère la latitude du premier lieu associé à cette ville et rempli le champ associé
+                    inputLatitude.removeAttribute('readonly');
+                    inputLatitude.setAttribute('value', dataVille.LieuLatitude);
+                    inputLatitude.setAttribute('readonly', '');
+
+                    // On récupère la longitude du premier lieu associé à cette ville et rempli le champ associé
+                    inputLongitude.removeAttribute('readonly');
+                    inputLongitude.setAttribute('value', dataVille.LieuLongitude);
+                    inputLongitude.setAttribute('readonly', '');
+
+                    // On récupère l'Id du 1er Lieu associé, le transforme en texte et l'utilise pour remplacer la valeur du select Lieu
+                    let valeurEnTexte = "".concat(dataVille.LieuId);
+                    selectLieu.value = valeurEnTexte;
+                }
+                xmlhttp.send(JSON.stringify(dataVille));
+
+                {#// Appel Ajax avec Fetch#}
+                {#fetch('{{ path('ville_ajax_select') }}', {method : 'POST', body : JSON.stringify(dataVille)} )#}
+                {#    .then(function (response){ //c'est la promesse#}
+                {#        return response.json();#}
+                {#    })#}
+                {#    .then(function (dataVille){#}
+                {#        console.log(dataVille);#}
+                {#        inputCodePostal.innerHTML = dataVille.codePostalAjax;#}
+                {#    });#}
+
+            });
+
+            // On ajout un event listener sur le select de Lieu
+            selectLieu.addEventListener('change', function (){
+
+                let dataLieu ={'lieu_id' : selectLieu.value};
+
+                let xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "{{ path('lieu_ajax_select') }}");
+                xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+                xmlhttp.onload = function (){
+
+                    // On récupère le code postal de la ville et rempli le champ associé
+                    dataLieu = JSON.parse((this.responseText));
+                    inputCodePostal.removeAttribute('readonly');
+                    inputCodePostal.setAttribute('value', dataLieu.codePostalAjax);
+                    inputCodePostal.setAttribute('readonly', '');
+
+                    // On récupère la rue du lieu et rempli le champ associé
+                    inputRue.removeAttribute('readonly');
+                    inputRue.setAttribute('value', dataLieu.LieuRue);
+                    inputRue.setAttribute('readonly', '');
+
+                    // On récupère la latitude du  lieu et rempli le champ associé
+                    inputLatitude.removeAttribute('readonly');
+                    inputLatitude.setAttribute('value', dataLieu.LieuLatitude);
+                    inputLatitude.setAttribute('readonly', '');
+
+                    // On récupère la longitude du lieu et rempli le champ associé
+                    inputLongitude.removeAttribute('readonly');
+                    inputLongitude.setAttribute('value', dataLieu.LieuLongitude);
+                    inputLongitude.setAttribute('readonly', '');
+
+                    // On récupère l'Id de la ville, le transforme en texte et l'utilise pour remplacer la valeur du select Ville
+                    let valeurEnTexte = "".concat(dataLieu.VilleId);
+                    selectVille.value = valeurEnTexte;
+                }
+                xmlhttp.send(JSON.stringify(dataLieu));
+            });
+        }
+    </script>
 {% endblock %}
 

@@ -43,4 +43,38 @@ class LieuController extends AbstractController
             'lieuForm' => $lieuForm->createView()
         ]);
     }
+
+    #[Route('/lieu/ajax/select', name: 'lieu_ajax_select')]
+    public function selectReactifAjax(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // On récupère le numero d'id correspondant a la value de l'option du select
+        $valueLieuOption = json_decode($request->getContent());
+        /**
+         * @var $lieuSelectionne Lieu
+         */
+        $lieuSelectionne = $entityManager->getRepository(Lieu::class)->find($valueLieuOption->lieu_id);
+
+        /**
+         * @var $villeAssocie Ville
+         */
+        // On chope sa ville associée
+        $villeAssocie = $lieuSelectionne->getVille();
+
+        // On selectionne les info de ce lieu pour préremplir le formulaire
+        $lieuRue =$lieuSelectionne->getRue();
+        $lieuLatitude =$lieuSelectionne->getLatitude();
+        $lieuLongitude =$lieuSelectionne->getLongitude();
+        // On selectionne les info de sa ville associé pour préremplir le formulaire
+        $villeId =$villeAssocie->getId();
+        $villeCodePostal =$villeAssocie->getCodePostal();
+
+        return $this->json([
+            'codePostalAjax' => $villeCodePostal,
+            'VilleId' => $villeId,
+            'LieuRue' => $lieuRue,
+            'LieuLatitude' => $lieuLatitude,
+            'LieuLongitude' => $lieuLongitude,
+        ], 200, [], ['groups' => "groupe_lieu"]);
+    }
+
 }
