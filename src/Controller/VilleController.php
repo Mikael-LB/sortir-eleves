@@ -25,20 +25,21 @@ class VilleController extends AbstractController
         /**
          * @var $listeLieuxAssocies Lieu[]
          */
+        // On chope tous ses lieux associées
         $listeLieuxAssocies = $villeSelectionne->getLieux();
 
-//        $lieu1 =$listeLieuxAssocies[0];
-//
-//        foreach ($listeLieuxAssocies as $lieu) {
-//
-//            array_push($listeIdLieuxAssocies, $lieu);
-//        }
-
-
+        // On selectionne les info du 1er lieu associé pour préremplir le formulaire
+        $lieu1Id =$listeLieuxAssocies[0]->getId();
+        $lieu1Rue =$listeLieuxAssocies[0]->getRue();
+        $lieu1Latitude =$listeLieuxAssocies[0]->getLatitude();
+        $lieu1Longitude =$listeLieuxAssocies[0]->getLongitude();
 
         return $this->json([
             'codePostalAjax' => $villeSelectionne->getCodePostal(),
-//            'listeLieux' => $lieu1
+            'LieuId' => $lieu1Id,
+            'LieuRue' => $lieu1Rue,
+            'LieuLatitude' => $lieu1Latitude,
+            'LieuLongitude' => $lieu1Longitude,
         ], 200, [], ['groups' => "groupe_ville"]);
     }
 }

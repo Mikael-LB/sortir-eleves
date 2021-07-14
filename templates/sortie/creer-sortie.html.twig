@@ -126,17 +126,31 @@
         xmlhttp.open("POST", "{{ path('ville_ajax_select') }}");
         xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
         xmlhttp.onload = function (){
-            // inputCodePostal.innerHTML = this.responseText;
 
+            // On récupère le code postal de la ville et rempli le champ associé
             dataVille = JSON.parse((this.responseText));
             inputCodePostal.removeAttribute('readonly');
             inputCodePostal.setAttribute('value', dataVille.codePostalAjax);
             inputCodePostal.setAttribute('readonly', '');
 
-            // inputRue.removeAttribute('readonly');
-            // inputRue.setAttribute('value', dataVille.listeLieux);
-            // inputRue.setAttribute('readonly', '');
+            // On récupère la rue du premier lieu associé à cette ville et rempli le champ associé
+            inputRue.removeAttribute('readonly');
+            inputRue.setAttribute('value', dataVille.LieuRue);
+            inputRue.setAttribute('readonly', '');
 
+            // On récupère la latitude du premier lieu associé à cette ville et rempli le champ associé
+            inputLatitude.removeAttribute('readonly');
+            inputLatitude.setAttribute('value', dataVille.LieuLatitude);
+            inputLatitude.setAttribute('readonly', '');
+
+            // On récupère la longitude du premier lieu associé à cette ville et rempli le champ associé
+            inputLongitude.removeAttribute('readonly');
+            inputLongitude.setAttribute('value', dataVille.LieuLongitude);
+            inputLongitude.setAttribute('readonly', '');
+
+            // On récupère la longitude du premier lieu associé à cette ville et rempli le champ associé
+            let valeurEnTexte = "".concat(dataVille.LieuId)
+            selectLieu.value = valeurEnTexte;
 
         }
         xmlhttp.send(JSON.stringify(dataVille));
