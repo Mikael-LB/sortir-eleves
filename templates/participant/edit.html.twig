@@ -6,17 +6,111 @@
 
 {% block body %}
     <h2>Mon profil</h2>
-    <div class="flex">
-        <div>
-            <img class="img-profil" src="{{ asset('images/profils/' ~ participant.urlImage ) }}" alt="{{ participant.pseudo }}">
-        </div>
-        <div>
+    <div>
+        <img class="img-profil" src="{{ asset('images/profils/' ~ participant.urlImage ) }}" alt="{{ participant.pseudo }}">
+    </div>
+    <section>
+        <table id="table-profil" class="box-shad">
+            <thead>
+            </thead>
+            <tbody>
             {{ form_start(participantForm) }}
-            {{ form_widget(participantForm) }}
-            <button class="button-blue">Enregister</button>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.pseudo) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.pseudo) }}
+                    {{ form_errors(participantForm.pseudo) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.prenom) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.prenom) }}
+                    {{ form_errors(participantForm.prenom) }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.nom) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.nom) }}
+                    {{ form_errors(participantForm.nom) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.telephone) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.telephone) }}
+                    {{ form_errors(participantForm.telephone) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.email) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.email) }}
+                    {{ form_errors(participantForm.email) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.plainPassword) }}
+                </th>
+                <td >
+                    {{ form_widget(participantForm.plainPassword) }}
+                    {{ form_errors(participantForm.plainPassword) }}
+                </td>
+            </tr>
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.campus) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.campus) }}
+                    {{ form_errors(participantForm.campus) }}
+                </td>
+            </tr>
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(participantForm.urlImage) }}
+                </th>
+                <td>
+                    {{ form_widget(participantForm.urlImage) }}
+                    {{ form_errors(participantForm.urlImage) }}                </td>
+            </tr>
+
+
+
+            </tbody>
+            <tfoot>
+            <td class="text-center">
+                <button class="button button-blue">Enregistrer</button>
+                </td>
             {{ form_end(participantForm) }}
 
-        </div>
-    </div>
+            <td class="text-center">
+                <a href="{{ path('sortie_liste_sorties') }}">
+                    <button class="button-blue">Annuler</button>
+                </a>
+            </td>
+            </tfoot>
+        </table>
+    </section>
+
 {% endblock %}
 
