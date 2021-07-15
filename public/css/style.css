@@ -206,3 +206,7 @@ h1 {
 .img-profil{
     max-width: 100px;
 }
+
+.button:hover{
+    font-weight: bold;
+}
