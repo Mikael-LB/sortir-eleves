@@ -36,12 +36,6 @@ class SortieController extends AbstractController
     {
         $participant = $this->getUser();
         $filtrer = new Filtrer();
-        //initial fill with all results
-        //without queryBuilder
-        //$sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
-        //gain a few request with doctrine by using the method with queryBuilder
-        //on sorties before now
-        $sorties=$sortieRepository->findForFilterForm($filtrer->setDateHeureDebut(new \DateTime('now')), $participant);
 
         $filtrerForm = $this->createForm(FiltrerType::class, $filtrer);
 
@@ -52,6 +46,15 @@ class SortieController extends AbstractController
             //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
             //$filtrer = $filtrerForm->getData();
             $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
+        }else {
+            //initial fill with all results
+            //without queryBuilder
+            //$sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
+            //gain a few request with doctrine by using the method with queryBuilder
+            //on sorties before now
+            $now = new \DateTime('now');
+            $nowPlus1Month = (new \DateTime('now'))->modify('+1 month');
+            $sorties=$sortieRepository->findForFilterForm($filtrer->setDateHeureDebut($now)->setDateHeureFin($nowPlus1Month), $participant);
         }
 
         return $this->render('sortie/liste-sorties.html.twig', [

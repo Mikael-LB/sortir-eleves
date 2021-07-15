@@ -78,7 +78,7 @@ class Sortie
     private $lieu;
 
     /**
-     * @ORM\OneToMany(targetEntity=AssosPartiSort::class, mappedBy="sortie")
+     * @ORM\OneToMany(targetEntity=AssosPartiSort::class, mappedBy="sortie", cascade={"remove","persist"})
      */
     private $assosPartiSort;
 
