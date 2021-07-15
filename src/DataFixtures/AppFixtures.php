@@ -130,10 +130,10 @@ class AppFixtures extends Fixture
                     ->setCampus($campusList[$i])
                 ;
                 if($bool){
-                    $participant->setUrlImage();
+                    $participant->setUrlImage('generic-man-heroe.jpeg');
                     $bool = false;
                 }else{
-                    $participant->setUrlImage();
+                    $participant->setUrlImage('generic-woman-heroe.jpeg');
                     $bool = true;
                 }
                 $campusList[$i]->addParticipant($participant);
