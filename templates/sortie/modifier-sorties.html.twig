@@ -8,94 +8,161 @@
 <h2>Modifier votre Sortie</h2>
 
 
-    {{ form_start(sortieForm) }}
-    <div class="flex-column">
+    <section>
+        <table id="table-creation" class="box-shad">
+            <thead>
+            </thead>
+            <tbody>
+            {{ form_start(sortieForm) }}
 
 
-        <div class="flex">
-
-            <div>
-                <div class="block">
+            <tr>
+                <th class="text-left" scope="row">
                     {{ field_label(sortieForm.nom) }}
+                </th>
+                <td>
                     {{ form_widget(sortieForm.nom) }}
                     {{ form_errors(sortieForm.nom) }}
-                </div>
+                </td>
 
-                <div class="block">
+                <th class="text-left" scope="row">
+                    <p>Campus :</p>
+                </th>
+                <td>
+                    <p>{{ campus }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
                     {{ field_label(sortieForm.dateHeureDebut) }}
+                </th>
+                <td>
                     {{ form_widget(sortieForm.dateHeureDebut) }}
                     {{ form_errors(sortieForm.dateHeureDebut) }}
-                </div>
-                <div class="block">
+                </td>
+
+
+                <th class="text-left" scope="row">
+                    {{ field_label(sortieForm.Ville) }}
+                </th>
+                <td>
+                    {{ form_widget(sortieForm.Ville) }}
+                    {{ form_errors(sortieForm.Ville) }}
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
                     {{ field_label(sortieForm.dateLimiteInscription) }}
+                </th>
+                <td>
                     {{ form_widget(sortieForm.dateLimiteInscription) }}
                     {{ form_errors(sortieForm.dateLimiteInscription) }}
-                </div>
-                <div class="block">
-                    {{ field_label(sortieForm.nbInscriptionsMax) }}
-                    {{ form_widget(sortieForm.nbInscriptionsMax) }}
-                    {{ form_errors(sortieForm.nbInscriptionsMax) }}
-                </div>
-                <div class="block">
-                    {{ field_label(sortieForm.duree) }}
-                    {{ form_widget(sortieForm.duree) }}
-                    {{ form_errors(sortieForm.duree) }}
-                </div>
-                <div class="block">
-                    {{ field_label(sortieForm.infosSortie) }}
-                    {{ form_widget(sortieForm.infosSortie) }}
-                    {{ form_errors(sortieForm.infosSortie) }}
-                </div>
-            </div>
+                </td>
 
-        </div>
-
-        <div class="flex">
-
-
-            <div  class="block">
-                <p>
-                    Campus : {{ campus }}
-                </p>
-            </div>
-            <div class="block">
-                {{ field_label(sortieForm.Ville) }}
-                {{ form_widget(sortieForm.Ville) }}
-                {{ form_errors(sortieForm.Ville) }}
-            </div>
-            <div class="block">
-                <div>
+                <th class="text-left" scope="row">
                     {{ field_label(sortieForm.Lieu) }}
+                </th>
+                <td>
                     {{ form_widget(sortieForm.Lieu) }}
                     {{ form_errors(sortieForm.Lieu) }}
+                </td>
+                <td>
                     <a href="{{ path('lieu_creer') }}"><img class="plus-button"
                                                             src="{{ asset('images/front-office/menu-items/plusImage.png') }}"
                                                             alt="image d'un plus"> </a>
-                </div>
-                <div class="block">
-                    <label for="rue">Rue :</label><input id="rue" type="text" readonly>
-                </div>
-                <div class="block">
-                    <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
-                </div>
-                <div class="block">
-                    <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
-                </div>
-                <div class="block">
-                    <label for="longitude">longitude :</label><input id="longitude" type="text" readonly>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
-        {{ form_widget(sortieForm.enregistrer) }}
-        {{ form_widget(sortieForm.publier) }}
-        {{ form_widget(sortieForm.supprimer) }}
-        {{ form_end(sortieForm) }}
-    </div>
-    <a href="{{ path('sortie_liste_sorties') }}">
-        <button class="button-blue">Annuler</button>
-    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(sortieForm.nbInscriptionsMax) }}
+                </th>
+                <td>
+                    {{ form_widget(sortieForm.nbInscriptionsMax) }}
+                    {{ form_errors(sortieForm.nbInscriptionsMax) }}
+                </td>
+
+                <th class="text-left" scope="row">
+                    <label for="rue">Rue :</label>
+                </th>
+                <td>
+                    <input id="rue" type="text" readonly>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row">
+                    {{ field_label(sortieForm.duree) }}
+                </th>
+                <td>
+                    {{ form_widget(sortieForm.duree) }}
+                    {{ form_errors(sortieForm.duree) }}
+                </td>
+
+                <th class="text-left" scope="row">
+                    <label for="codePostal">Code Postal :</label>
+                </th>
+                <td>
+                    <input id="codePostal" type="text" readonly>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="text-left" scope="row" rowspan="2">
+                    {{ field_label(sortieForm.infosSortie) }}
+                </th>
+                <td rowspan="2">
+                    {{ form_widget(sortieForm.infosSortie) }}
+                    {{ form_errors(sortieForm.infosSortie) }}
+                </td>
+
+                <th class="text-left" scope="row">
+                    <label for="latitude">latitude :</label>
+                </th>
+                <td>
+                    <input id="latitude" type="text" readonly>
+                </td>
+
+
+            </tr>
+            <tr>
+                <th class="text-left" scope="row">
+                    <label for="longitude">longitude :</label>
+                </th>
+                <td>
+                    <input id="longitude" type="text" readonly>
+                </td>
+            </tr>
+
+
+
+            </tbody>
+            <tfoot>
+
+            <td class="text-center">
+                {{ form_widget(sortieForm.enregistrer) }}
+            </td>
+            <td class="text-center">
+                {{ form_widget(sortieForm.publier) }}
+            </td>
+            <td>
+                {{ form_widget(sortieForm.supprimer) }}
+                {{ form_end(sortieForm) }}
+            </td>
+            <td class="text-center">
+                <a href="{{ path('sortie_liste_sorties') }}">
+                    <button class="button-blue">Annuler</button>
+                </a>
+            </td>
+            </tfoot>
+        </table>
+    </section>
+
+
+
+
 
 {% endblock %}
 
