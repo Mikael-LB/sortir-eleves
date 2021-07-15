@@ -23,32 +23,39 @@ class Sortie
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=3, minMessage="Plus de 3 caractères svp", max=255, maxMessage="moins de 255 caractères svp")
+     * @Assert\Type(type="string", message="Le nom doit être une string")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type(type="datetime", message="La date doit être une date en format datetime")
      */
     private $dateHeureDebut;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Type(type="integer", message="La durée en minutes doit etre un entier")
      */
     private $duree;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Type(type="datetime", message="La date doit être une date en format date")
+     * @Assert\LessThan(propertyPath="dateHeureDebut", message="La date de fermeture des inscriptions doit etre inferieure à celle de début de sortie")
      */
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Type(type="integer", message="Le nombre de participant doit etre un entier")
      */
     private $nbInscriptionsMax;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=3, minMessage="Plus de 3 caractères SVP")
+     * @Assert\Type (type="string", message="les infos doivent etre du texte")
      * @Assert\NotBlank()
      */
     private $infosSortie;
