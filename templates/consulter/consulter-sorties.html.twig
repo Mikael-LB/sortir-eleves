@@ -3,7 +3,7 @@
 {% block body %}
 
     <h2>Consultation des détails de la sortie</h2>
-    <p>Nom : {{ sortie.nom }}</p>
+    <div><p id="text-rouge">Nom :</p> {{ sortie.nom }}</div>
     <br>
     <p>Date et heure de sortie: {{ sortie.dateHeureDebut | date('d/m/Y') }}</p>
     <br>
@@ -13,7 +13,7 @@
     <br>
     <p>Duree: {{ sortie.duree }} minutes</p>
     <br>
-    <p>Description et infos: {{ sortie.infosSortie }}</p>
+    <p class ="description-sortie">Description et infos: {{ sortie.infosSortie }}</p>
     <br>
     <p>Campus: {{ sortie.campus.nom }}</p>
     <br>
@@ -28,12 +28,12 @@
     <p>longitude: {{ sortie.lieu.longitude }}</p>
     <br>
 
-    <a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a>
+    <button class="button-blue"><a href="{{ path('sorties_inscrire', { 'id' : sortie.id }) }}">S'inscrire</a></button>
 
     {% for inscrit in sortie.assosPartiSort %}
     {% if app.user.id == inscrit.participant.id %}
     {% set isncrit = true %}
-        <a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Désister</a>
+        <button class="button-blue"><a href="{{ path('sorties_desister', { 'id' : sortie.id }) }}">Désister</a></button>
     {% endif %}
     {% endfor %}
 
