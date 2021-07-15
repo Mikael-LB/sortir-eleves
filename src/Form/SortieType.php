@@ -58,10 +58,12 @@ class SortieType extends AbstractType
                 'mapped' => false,
             ])
             ->add('enregistrer', SubmitType::class,[
-                'label' => 'Enregistrer sans publier'
+                'label' => 'Enregistrer sans publier',
+                'attr' =>['class' => 'button-blue'],
             ])
             ->add('publier', SubmitType::class,[
                 'label' => 'Publier',
+                'attr' =>['class' => 'button-blue'],
             ])
         ;
 
