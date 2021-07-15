@@ -22,12 +22,12 @@ class Filtrer
     private $nom;
     /**
      * @var \DateTime
-     * @Assert\DateTime()
+     * @Assert\Type(type="datetime",message="date au format Y:m:d h:i:s")
      */
     private $dateHeureDebut;
     /**
      * @var \DateTime
-     * @Assert\DateTime()
+     * @Assert\Type(type="datetime",message="date au format Y:m:d h:i:s")
      * @Assert\GreaterThan(propertyPath="dateHeureDebut",
      *     message="La date de fin doit être postérieure à la date de début")
      */

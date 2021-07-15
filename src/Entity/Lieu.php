@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
@@ -23,24 +24,30 @@ class Lieu
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length (min="4", minMessage="4 caractère minimum pour votre nom de lieu", max="255", maxMessage="Pas plus de 255 caractères SVP")
+     * @Assert\Type(type="string", message="le nom du lieu doit etre une string")
      * @Groups ({"group_ville", "group_lieu"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length (min="4", minMessage="4 caractère minimum pour votre rue", max="255", maxMessage="Pas plus de 255 caractères SVP")
+     * @Assert\Type(type="string", message="la rue doit etre une string")
      * @Groups ({"group_ville", "group_lieu"})
      */
     private $rue;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Assert\Type (type="float", message="la latitude oit etre un float exemple : 49.38816 ou -127.70166")
      * @Groups ({"group_ville", "group_lieu"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Assert\Type (type="float", message="la longitude oit etre un float exemple : 49.38816 ou -127.70166")
      * @Groups ({"group_ville", "group_lieu"})
      */
     private $longitude;
