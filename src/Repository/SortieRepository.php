@@ -37,10 +37,11 @@ class SortieRepository extends ServiceEntityRepository
         $passees = $filtrer->getOldSorties();
 
         //dateFin can't be null if dateDebut is set, and vice versa
+        //so force the null one function of the other
         if (isset($dateDebut)) {
             if (!isset($dateFin)) {
                 $dateFin = clone $dateDebut;
-                $dateFin->add(new \DateInterval('P1D'));
+                $dateFin->add(new \DateInterval('P7D'));
             }
         }
         if (isset($dateFin)) {
@@ -52,27 +53,38 @@ class SortieRepository extends ServiceEntityRepository
             }
         }
 
-        //
+        //query builder
         $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
+        $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
+        $queryBuilder->join('sortie.campus','campus')->addSelect('campus');
+
+        //reduce by Campus
         if (isset($campus)) {
             $queryBuilder->andWhere('sortie.campus = :campus')->setParameter('campus', $campus);
         }
+
+        //reduce by user string in the sortie name
         if (isset($nom) && !empty($nom)) {
             $queryBuilder->andWhere("sortie.nom LIKE :pnom")->setParameter('pnom', '%' . $nom . '%');
         }
+
+        //reduce by date
         if (isset($dateDebut) && !empty($dateDebut)) {
             $queryBuilder->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
                 ->setParameter('dateDebut', $dateDebut)
                 ->setParameter('dateFin', $dateFin);
         }
+
+        //reduce to sortie which the user is organisateur
         if ($isOrganisateur) {
             $queryBuilder->andWhere('sortie.organisateur = :user')->setParameter('user', $participant->getId());
         }
 
         //when the 2 options isInscrit and notInscrit are checked, the result contains all result
         if ($isInscrit xor $notInscrit) {
-            $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
-            $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
+//            $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
+//            $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
 
             if ($isInscrit) {
                 $queryBuilder->andWhere('assos.participant = :user')->setParameter('user', $participant->getId());
@@ -82,6 +94,7 @@ class SortieRepository extends ServiceEntityRepository
             }
         }
 
+        //reduce by old sorties
         if ($passees) {
             $queryBuilder->andWhere("CURRENT_DATE() > DATE_ADD(sortie.dateHeureDebut, sortie.duree, 'minute')");
         }

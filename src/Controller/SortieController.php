@@ -34,16 +34,21 @@ class SortieController extends AbstractController
                                  EtatRepository $etatRepository,
                                  ParticipantRepository $participantRepository): Response
     {
-        //initial fill with all results
-        $sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
-
+        $participant = $this->getUser();
         $filtrer = new Filtrer();
+        //initial fill with all results
+        //without queryBuilder
+        //$sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
+        //gain a few request with doctrine by using the method with queryBuilder
+        //on sorties before now
+        $sorties=$sortieRepository->findForFilterForm($filtrer->setDateHeureDebut(new \DateTime('now')), $participant);
+
         $filtrerForm = $this->createForm(FiltrerType::class, $filtrer);
 
         $filtrerForm->handleRequest($request);
 
         if ($filtrerForm->isSubmitted() && $filtrerForm->isValid()) {
-            $participant = $this->getUser();
+
             //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
             //$filtrer = $filtrerForm->getData();
             $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
