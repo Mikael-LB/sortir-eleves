@@ -4,18 +4,23 @@
             <img id="nav-logo" src="{{ asset('images/front-office/logo/Sortir-logo.jpg') }}" alt="Sortir entre élèves">
         </a>
     </div>
-    <div class="padding2em">
+    <div class="padding1em">
         <ul class="flex navbar">
             {% if app.user %}
-            <li class="nodisc"><a href="{{ path('sortie_liste_sorties') }}" class="button">Accueil</a></li>
-            <li class="nodisc"><a href="" class="button">Villes</a></li>
-            <li class="nodisc"><a href="" class="button">Campus</a></li>
-            <li class="nodisc"><a href="{{ path('sortie_creer') }}" class="button">Creer Sortie</a></li>
-            <li class="nodisc"><a href="{{ path('lieu_creer') }}" class="button">Creer Lieu</a></li>
-            <li class="nodisc"><a href=" {{ path('participant_editer', {'id': app.user.id}) }} " class="button">Mon profil</a></li>
-                <li class="nodisc"><a href="{{ path('app_logout')}}" title="logout" class="button">Se déconnecter ({{ app.user.nom }})</a></li>
-
+                <li class="nodisc"><a href="{{ path('sortie_liste_sorties') }}" class="button">Accueil</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nodisc"><a href="" class="button">Villes</a></li>
+                    <li class="nodisc"><a href="" class="button">Campus</a></li>
+                    <li class="nodisc"><a href="{{ path('lieu_creer') }}" class="button">Creer Lieu</a></li>
+                {% endif %}
+                <li class="nodisc"><a href="{{ path('sortie_creer') }}" class="button">Creer Sortie</a></li>
+                <li class="nodisc"><a href=" {{ path('participant_editer', {'id': app.user.id}) }} " class="button">Mon profil</a></li>
+                <li class="nodisc"><a href="{{ path('app_logout')}}" title="logout" class="button">Se déconnecter</a></li>
             {% endif %}
         </ul>
+        {%  if app.user %}
+            <p class="text-right"><b>Date du jour : {{ "now" | date('d/m/Y') }}</b></p>
+            <p class="text-right"><b>{{ app.user.nom }} {{ app.user.prenom }}</b></p>
+        {% endif %}
     </div>
 </div>
