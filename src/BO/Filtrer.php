@@ -22,28 +22,34 @@ class Filtrer
     private $nom;
     /**
      * @var \DateTime
+     * @Assert\DateTime()
      */
     private $dateHeureDebut;
     /**
      * @var \DateTime
+     * @Assert\DateTime()
      * @Assert\GreaterThan(propertyPath="dateHeureDebut",
      *     message="La date de fin doit être postérieure à la date de début")
      */
     private $dateHeureFin;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $isOrganisateur;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $isInscrit;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $notInscrit;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $oldSorties;
 
