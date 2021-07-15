@@ -115,6 +115,7 @@ class AppFixtures extends Fixture
 
         //Création des participants
         for ($i = 0; $i < $nbCampus; $i++) {
+            $bool = true;
             for ($j = 0; $j< 5; $j++){
                 $participant= new Participant();
                 $participant->setNom($generator->lastName)
@@ -128,6 +129,13 @@ class AppFixtures extends Fixture
                     ->setRoles(["ROLE_USER"])
                     ->setCampus($campusList[$i])
                 ;
+                if($bool){
+                    $participant->setUrlImage();
+                    $bool = false;
+                }else{
+                    $participant->setUrlImage();
+                    $bool = true;
+                }
                 $campusList[$i]->addParticipant($participant);
 
                 $manager->persist($participant);
