@@ -76,7 +76,7 @@
                     <label for="rue">Rue :</label><input id="rue" type="text" readonly>
                 </div>
                 <div class="block">
-                    <label for="codePostal">Code Postal :</label><p id="codePostal" type="text"></p>
+                    <label for="codePostal">Code Postal :</label><input id="codePostal" type="text" readonly>
                 </div>
                 <div class="block">
                     <label for="latitude">latitude :</label><input id="latitude" type="text" readonly>
@@ -205,6 +205,47 @@
                 }
                 xmlhttp.send(JSON.stringify(dataLieu));
             });
+
+            function initializePage (){
+
+                let dataLieu ={'lieu_id' : selectLieu.value};
+
+                let xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "{{ path('lieu_ajax_select') }}");
+                xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+                xmlhttp.onload = function (){
+
+                    // On récupère le code postal de la ville et rempli le champ associé
+                    dataLieu = JSON.parse((this.responseText));
+                    inputCodePostal.removeAttribute('readonly');
+                    inputCodePostal.setAttribute('value', dataLieu.codePostalAjax);
+                    inputCodePostal.setAttribute('readonly', '');
+
+                    // On récupère la rue du lieu et rempli le champ associé
+                    inputRue.removeAttribute('readonly');
+                    inputRue.setAttribute('value', dataLieu.LieuRue);
+                    inputRue.setAttribute('readonly', '');
+
+                    // On récupère la latitude du  lieu et rempli le champ associé
+                    inputLatitude.removeAttribute('readonly');
+                    inputLatitude.setAttribute('value', dataLieu.LieuLatitude);
+                    inputLatitude.setAttribute('readonly', '');
+
+                    // On récupère la longitude du lieu et rempli le champ associé
+                    inputLongitude.removeAttribute('readonly');
+                    inputLongitude.setAttribute('value', dataLieu.LieuLongitude);
+                    inputLongitude.setAttribute('readonly', '');
+
+                    // On récupère l'Id de la ville, le transforme en texte et l'utilise pour remplacer la valeur du select Ville
+                    let valeurEnTexte = "".concat(dataLieu.VilleId);
+                    selectVille.value = valeurEnTexte;
+                }
+                xmlhttp.send(JSON.stringify(dataLieu));
+            }
+
+            initializePage();
+
+
         }
     </script>
 {% endblock %}
