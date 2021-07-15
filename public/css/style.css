@@ -133,7 +133,7 @@ main {
 
 .text-rouge{
     font-size : 16px;
-    color:rgb(255,0,0);
+    color:crimson;
 }
 
 .plus-button {
@@ -160,7 +160,7 @@ main {
 }
 
 #description-sortie{
-    width: 100px;
+    width: 100%;
 }
 
 

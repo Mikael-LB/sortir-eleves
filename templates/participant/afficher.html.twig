@@ -3,14 +3,54 @@
 {% block body %}
     {# Vue permettant d'afficher les informations concernant un participant, méthode afficher du participantCntroller #}
     <h2>{{ participant.pseudo }}</h2>
-    <p>Prenom: {{ participant.prenom }}</p>
-    <p>Nom: {{ participant.nom }}</p>
-    <p>Telephone: {{ participant.telephone }}</p>
-    <p>Email: {{ participant.email }}</p>
-    <p>Campus: {{ participant.campus.nom }}</p>
+
+<section>
+    <table id="table-creation" class="box-shad">
+        <thead>
+        </thead>
+        <tbody>
+        <tr>
+            <th class="text-left" scope="row">
+                Prenom:
+            </th>
+            <td>{{ participant.prenom }}</td>
+        </tr>
+
+        <tr>
+            <th class="text-left" scope="row">
+                Nom:
+            </th>
+            <td>{{ participant.nom }}</td>
+        </tr>
+
+        <tr>
+            <th class="text-left" scope="row">
+                Telephone:
+            </th>
+            <td>{{ participant.telephone }}</td>
+        </tr>
+
+        <tr>
+            <th class="text-left" scope="row">
+                Email:
+            </th>
+            <td>{{ participant.email }}</td>
+        </tr>
+
+        <tr>
+            <th class="text-left" scope="row">
+                Campus:
+            </th>
+            <td>{{ participant.campus.nom }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</section>
+
 
     {# Lien permettant de rediriger vers la page d'accueil: page de la liste des sorties #}
-    <a href="{{ path('sortie_liste_sorties', { 'id' : participant.id }) }}">Retour</a>
+    <button class="button-blue"><a href="{{ path('sortie_liste_sorties', { 'id' : participant.id }) }}" class="a-text-white">Retour</a></button>
 
 {% endblock %}
 
