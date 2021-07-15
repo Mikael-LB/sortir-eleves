@@ -6,9 +6,11 @@
 
 {% block body %}
     <h2>Mon profil</h2>
+    {% if participant.urlImage %}
     <div>
         <img class="img-profil" src="{{ asset('images/profils/' ~ participant.urlImage ) }}" alt="{{ participant.pseudo }}">
     </div>
+    {% endif %}
     <section>
         <table id="table-profil" class="box-shad">
             <thead>
