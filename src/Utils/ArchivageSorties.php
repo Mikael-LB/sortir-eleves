@@ -64,11 +64,11 @@ class ArchivageSorties
             $etatPrecedent = $sortie->getEtat();
 
             // on classe les sorties qui ne sont pas en cours de créations
-            if ($sortie->getEtat()->getLibelle() != $etatListe[0]) {
+            if ($sortie->getEtat()->getLibelle() != $etatListe[0]->getLibelle()) {
 
 
-                // HISTORISEE
-                if ($dateTimeFin > $dateTimeHistorisation) {
+                // HISTORISEE pour celles qui ne sont pas En Création
+                if ($dateTimeFin < $dateTimeHistorisation) {
                     $sortie->setEtat($etatListe[6]);
                     $etatPrecedent->removeSorty($sortie);
                     $etatListe[6]->addSorty($sortie);
@@ -76,10 +76,11 @@ class ArchivageSorties
                     $this->entityManager->persist($etatListe[6]);
                 }
 
-                if ($sortie->getEtat()->getLibelle() != $etatListe[5]){
+                // On classe les sorties qui ne sont pas Annulée
+                if ($sortie->getEtat()->getLibelle() != $etatListe[5]->getLibelle()){
 
                     // TERMINER pour celles qui ne sont pas Annulée
-                    if ( (($dateTimeFin < $nowDate) && ($dateTimeFin < $dateTimeHistorisation)) ) {
+                    if ( (($dateTimeFin < $nowDate) && ($dateTimeFin > $dateTimeHistorisation)) ) {
                         $sortie->setEtat($etatListe[4]);
                         $etatPrecedent->removeSorty($sortie);
                         $etatListe[4]->addSorty($sortie);
@@ -105,6 +106,7 @@ class ArchivageSorties
                         $this->entityManager->persist($etatListe[2]);
                     }
 
+                    // OUVERTE pour celles qui ne sont pas Annulée
                     if ( ($dateFinInscr > $nowDate) ){
                         $sortie->setEtat($etatListe[1]);
                         $etatPrecedent->removeSorty($sortie);
