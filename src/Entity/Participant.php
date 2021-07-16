@@ -70,7 +70,6 @@ class Participant implements UserInterface
      * @Assert\Length (min="4", minMessage="4 caractère minimum pour votre pseudo", max="50", maxMessage="Pas plus de 50 caractères SVP")
      * @Assert\Type (type="string", message="Le pseudo doit être une string")
      * @Assert\NotBlank
-     * @Assert\Unique(message="votre pseudo doit etre unique")
      */
     private $pseudo;
 
