@@ -71,6 +71,7 @@ class Participant implements UserInterface
      * @Assert\Type (type="string", message="Le pseudo doit être une string")
      * @Assert\NotBlank
      */
+    //this assert block the validation of the form @Assert\Unique(message="votre pseudo doit etre unique")
     private $pseudo;
 
     /**

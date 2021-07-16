@@ -36,12 +36,6 @@ class SortieController extends AbstractController
     {
         $participant = $this->getUser();
         $filtrer = new Filtrer();
-        //initial fill with all results
-        //without queryBuilder
-        //$sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
-        //gain a few request with doctrine by using the method with queryBuilder
-        //on sorties before now
-        $sorties=$sortieRepository->findForFilterForm($filtrer->setDateHeureDebut(new \DateTime('now')), $participant);
 
         $filtrerForm = $this->createForm(FiltrerType::class, $filtrer);
 
@@ -52,6 +46,15 @@ class SortieController extends AbstractController
             //$participant = $participantRepository->findOneByEmail([$this->getUser()->getUsername()]);
             //$filtrer = $filtrerForm->getData();
             $sorties = $sortieRepository->findForFilterForm($filtrer, $participant);
+        }else {
+            //initial fill with all results
+            //without queryBuilder
+            //$sorties = $sortieRepository->findBy([], ["dateHeureDebut" => "ASC"]);
+            //gain a few request with doctrine by using the method with queryBuilder
+            //on sorties before now
+            $now = new \DateTime('now');
+            $nowPlus1Month = (new \DateTime('now'))->modify('+1 month');
+            $sorties=$sortieRepository->findForFilterForm($filtrer->setDateHeureDebut($now)->setDateHeureFin($nowPlus1Month), $participant);
         }
 
         return $this->render('sortie/liste-sorties.html.twig', [
@@ -62,12 +65,22 @@ class SortieController extends AbstractController
 
 //Méthode permettant d'afficher les informations concernant la sortie
     #[Route('/sorties/consulter/{id}', name: 'sorties_consulter', requirements: ['id' => '\d+'])]
-    public function consulter($id, SortieRepository $sortieRepository): Response
+    public function consulter($id,
+                              SortieRepository $sortieRepository): Response
     {
         //Afficher les détails concernant une sortie
         $sortie = $sortieRepository->find($id);
 
-        //Retourne vers la vue des détails de la sortie
+        //Si l'état de ma sortie est ouverte ou historisée on ne pas accéder aux détails concernant cette sortie
+        if($sortie->getEtat()->getLibelle() == 'En Création'){
+            $this->addFlash('error','Vous ne pouvez pas consultez les informations concernant cette sortie car sortie en création');
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }else if( $sortie->getEtat()->getLibelle() == 'Historisée'){
+            $this->addFlash('error','Vous ne pouvez pas consultez les informations concernant cette sortie car sortie historisé');
+            return  $this->redirectToRoute('sortie_liste_sorties');
+        }
+
+        //Retourne vers la vue des détails de la sortie si la sortie n'est ni en création, ni historisée
         return $this->render('consulter/consulter-sorties.html.twig', [
             'sortie' => $sortie,
         ]);
@@ -151,7 +164,7 @@ class SortieController extends AbstractController
             'participant' => $this->getUser()]);
         //Je vérifie si dans ma base de données il existe déjà un inscrit à une sortie donnée c-à-d si la combinaison sortie et participant existe déjà
         if ($inscription) {
-            $this->addFlash('pas possible', 'Vous êtes déjà inscrit à cette sortie');
+            $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie');
          return $this->redirectToRoute('sortie_liste_sorties');
 
         } else {
@@ -171,10 +184,10 @@ class SortieController extends AbstractController
                 $entityManager->persist($sortie);
                 $entityManager->persist($assosPartiSort);
                 $entityManager->flush();
-                   $this->addFlash('possible','Vous êtes inscrit');
+                   $this->addFlash('success','Vous êtes inscrit');
                 return $this->redirectToRoute('sortie_liste_sorties');
             }else{
-                $this->addFlash('impossible','plus de places ou datelimite dépassée ou sortie fermée');
+                $this->addFlash('error','plus de places ou datelimite dépassée ou sortie fermée');
               return $this->redirectToRoute('sortie_liste_sorties');
             }
         }
@@ -202,11 +215,14 @@ class SortieController extends AbstractController
             //Je valide la suppression de cette inscription
             $entityManager->remove($inscription);
             $entityManager->flush();
-            $this->addFlash('OK', 'Vous êtes désinscrit de cette sortie');
+            $this->addFlash('success', 'Vous êtes désinscrit de cette sortie');
+            return $this->redirectToRoute('sortie_liste_sorties');
+        }else{
+            $this->addFlash('error','Vous ne pouvez pas vous désinscrire car la date de la sortie est dépassée');
+            return $this->redirectToRoute('sortie_liste_sorties');
         }
-        return $this->redirectToRoute('sortie_liste_sorties');
 
-    }
+}
 
 
 
