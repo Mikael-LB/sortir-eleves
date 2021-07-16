@@ -53,6 +53,7 @@ main {
     color:black;
 }
 
+
 .button-blue{
     background: linear-gradient(127deg,#4b67f6,#3ca6fc);
     border:2px inset #3ca6fc;
@@ -130,6 +131,11 @@ main {
     color:white;
 }
 
+.text-rouge{
+    font-size : 16px;
+    color:crimson;
+}
+
 .plus-button {
     border: 2px solid lightgrey;
     background-color: #fff;
@@ -137,32 +143,65 @@ main {
     height: 2.5em;
     width: 2.5em;
     border-radius: 999px;
-    position: relative;
-
-        &:after,
-        &:before {
-             content: "";
-             display: block;
-             background-color: grey;
-             position: absolute;
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%);
-         },
-
-        &:before {
-             height: 1em;
-             width: 0.2em;
-         }
-
-        &:after {
-             height: 0.2em;
-             width: 1em;
-         }
+    position: center;
     }
 
 #div-fix-height{
     height:400px;
     max-height: 400px;
     overflow: auto;
+}
+
+#tableau-participants{
+    height: 100px;
+    max-height: 100px;
+    width:400px;
+    overflow: auto;
+}
+
+#description-sortie{
+    width: 100%;
+}
+
+
+
+h1 {
+    text-align:center;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+    margin:0 auto;
+}
+
+#table-annuler{
+    border-collapse: collapse;
+    width:50%;
+    margin:0 auto;
+}
+
+#table-annuler td{
+    padding:1em 10px;
+}
+
+.td40 {
+    width:40%;
+}
+
+.text-center{
+    text-align:center;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.img-profil{
+    max-width: 100px;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.button:hover{
+    font-weight: bold;
 }

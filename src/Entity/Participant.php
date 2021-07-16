@@ -23,6 +23,9 @@ class Participant implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length (min=3, minMessage="3 caractère minimum pour votre email", max="180", maxMessage="Pas plus de 180 caractères SVP")
+     * @Assert\Type (type="string", message="L'email doit être une string")
+     * @Assert\NotBlank
      */
     private $email;
 
@@ -34,31 +37,41 @@ class Participant implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     *
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\Length (min=3, minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Type (type="string", message="Le pseudo doit être une string")
+     * @Assert\NotBlank
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\Length (min="3", minMessage="3 caractère minimum pour votre prénom", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Type (type="string", message="Le prenom doit être une string")
+     * @Assert\NotBlank
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=25)
      * @Assert\Length(min="10", minMessage="Votre numéro doit avoir 10 chiffres", max="25", maxMessage="Pas plus de 10 chiffres (espace/point et +33 non inclus)")
+     * @Assert\Type (type="string", message="Le numero doit être une string")
+     * @Assert\NotBlank
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      * @Assert\Length (min="4", minMessage="4 caractère minimum pour votre pseudo", max="50", maxMessage="Pas plus de 50 caractères SVP")
+     * @Assert\Type (type="string", message="Le pseudo doit être une string")
+     * @Assert\NotBlank
      */
+    //this assert block the validation of the form @Assert\Unique(message="votre pseudo doit etre unique")
     private $pseudo;
 
     /**

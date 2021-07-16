@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Utils\FixturesService;
 use App\Entity\AssosPartiSort;
 use App\Entity\Campus;
 use App\Entity\Etat;
@@ -33,6 +34,7 @@ class AppFixtures extends Fixture
     protected $sortieRepository;
     protected $assosPartiSortRepository;
     protected $passwordEncoder;
+    protected $fixturesService;
 
 
     public function __construct(CampusRepository $campusRepository,
@@ -42,7 +44,8 @@ class AppFixtures extends Fixture
                                 ParticipantRepository $participantRepository,
                                 SortieRepository $sortieRepository,
                                 AssosPartiSortRepository $assosPartiSortRepository,
-                                UserPasswordEncoderInterface $passwordEncoder
+                                UserPasswordEncoderInterface $passwordEncoder,
+                                FixturesService $fixturesService,
     ){
     $this->campusRepository = $campusRepository;
     $this->villeRepository = $villeRepository;
@@ -52,6 +55,7 @@ class AppFixtures extends Fixture
     $this->sortieRepository= $sortieRepository;
     $this->assosPartiSortRepository =$assosPartiSortRepository;
     $this->passwordEncoder = $passwordEncoder;
+    $this->fixturesService = $fixturesService;
     }
 
     public function load(ObjectManager $manager)
@@ -92,9 +96,26 @@ class AppFixtures extends Fixture
         $campus->addParticipant($participant);
         $manager->persist($campus);
 
+        //Add a Participant with role Admin
+        $adminParticipant= new Participant();
+        $adminParticipant->setNom('Istrator')
+            ->setEmail('admin@mail.com')
+            ->setPrenom('Admin')
+            ->setPassword($this->passwordEncoder->encodePassword($adminParticipant, 'password'))
+            ->setTelephone('02 22 33 44 55 66')
+            ->setPseudo('Root')
+            ->setEstAdministrateur(true)
+            ->setCompteActif(true)
+            ->setRoles(["ROLE_ADMIN"])
+            ->setCampus($campusList[1])
+        ;
+        $manager->persist($adminParticipant);
+        $campus->addParticipant($adminParticipant);
+        $manager->persist($campus);
 
         //Création des participants
         for ($i = 0; $i < $nbCampus; $i++) {
+            $bool = true;
             for ($j = 0; $j< 5; $j++){
                 $participant= new Participant();
                 $participant->setNom($generator->lastName)
@@ -108,6 +129,13 @@ class AppFixtures extends Fixture
                     ->setRoles(["ROLE_USER"])
                     ->setCampus($campusList[$i])
                 ;
+                if($bool){
+                    $participant->setUrlImage('generic-man-heroe.jpeg');
+                    $bool = false;
+                }else{
+                    $participant->setUrlImage('generic-woman-heroe.jpeg');
+                    $bool = true;
+                }
                 $campusList[$i]->addParticipant($participant);
 
                 $manager->persist($participant);
@@ -238,14 +266,10 @@ class AppFixtures extends Fixture
                         $j--;
                     // Sinon on peut l'ajouter à la sortie
                     }else{
-                        $assosPartiSort = new AssosPartiSort();
-                        $assosPartiSort->setSortie($sortie)
-                            ->setParticipant($participant)
-                            ;
-                        $sortie->addAssosPartiSort($assosPartiSort);
-                        $participant->addAssosPartiSort($assosPartiSort);
-                        $manager->persist($participant);
-                        $manager->persist($assosPartiSort);
+                        $ok = $this->fixturesService->addParticipantIfNotAlreadyInscrit($participant, $sortie, $manager);
+                        if(!$ok){
+                            $j--;
+                        }
                     }
                 }
             }
@@ -259,14 +283,10 @@ class AppFixtures extends Fixture
                         $j--;
                         // Sinon on peut l'ajouter à la sortie
                     }else{
-                        $assosPartiSort = new AssosPartiSort();
-                        $assosPartiSort->setSortie($sortie)
-                            ->setParticipant($participant)
-                        ;
-                        $sortie->addAssosPartiSort($assosPartiSort);
-                        $participant->addAssosPartiSort($assosPartiSort);
-                        $manager->persist($participant);
-                        $manager->persist($assosPartiSort);
+                        $ok = $this->fixturesService->addParticipantIfNotAlreadyInscrit($participant, $sortie, $manager);
+                        if(!$ok){
+                            $j--;
+                        }
                     }
                 }
             }
@@ -416,4 +436,6 @@ Fin ancienne version  */
 
         $manager->flush();
     }
+
+
 }

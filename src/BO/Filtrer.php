@@ -11,38 +11,45 @@ class Filtrer
 {
     /**
      * @var Campus
-     * @Assert\NotNull(message="Ne peut être vide")
+     * @Assert\Type("App\Entity\Campus")
      */
     private $campus;
     /**
      * @var string
+     * @Assert\Type("string")
      * @Assert\Length (max="50", maxMessage="Recherche limitée à 50 caractères")
      */
     private $nom;
     /**
      * @var \DateTime
+     * @Assert\Type(type="datetime",message="date au format Y:m:d h:i:s")
      */
     private $dateHeureDebut;
     /**
      * @var \DateTime
+     * @Assert\Type(type="datetime",message="date au format Y:m:d h:i:s")
      * @Assert\GreaterThan(propertyPath="dateHeureDebut",
      *     message="La date de fin doit être postérieure à la date de début")
      */
     private $dateHeureFin;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $isOrganisateur;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $isInscrit;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $notInscrit;
     /**
      * @var boolean
+     * @Assert\Type ("bool")
      */
     private $oldSorties;
 
@@ -79,7 +86,7 @@ class Filtrer
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): self
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -91,7 +98,7 @@ class Filtrer
         return $this->dateHeureFin;
     }
 
-    public function setDateHeureFin(\DateTimeInterface $dateHeureFin): self
+    public function setDateHeureFin(?\DateTimeInterface $dateHeureFin): self
     {
         $this->dateHeureFin = $dateHeureFin;
 

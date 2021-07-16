@@ -27,7 +27,7 @@ class SortieRepository extends ServiceEntityRepository
     public function findForFilterForm(Filtrer $filtrer, Participant $participant)
     {
 
-        $idCampus = $filtrer->getCampus()->getId();
+        $campus = $filtrer->getCampus();
         $nom = $filtrer->getNom();
         $dateDebut = $filtrer->getDateHeureDebut();
         $dateFin = $filtrer->getDateHeureFin();
@@ -36,22 +36,57 @@ class SortieRepository extends ServiceEntityRepository
         $notInscrit = $filtrer->getNotInscrit();
         $passees = $filtrer->getOldSorties();
 
+        //dateFin can't be null if dateDebut is set, and vice versa
+        //so force the null one function of the other
+        if (isset($dateDebut)) {
+            if ($dateFin == null) {
+                $dateFin = clone $dateDebut;
+                //add 7 days to dateFin
+                $dateFin->add(new \DateInterval('P7D'));
+                dump($dateDebut,$dateFin);
+            }
+        }
+        if (isset($dateFin)) {
+            if ($dateDebut == null) {
+                //clone dateFin to initialise the dateDebut
+                $dateDebut = clone $dateFin;
+                //here we add 7 days to dateFin too
+                $dateFin->add(new \DateInterval('P7D'));
+                dump($dateDebut,$dateFin);
+            }
+        }
+
+        //query builder
         $queryBuilder = $this->createQueryBuilder('sortie');
-        $queryBuilder->andWhere('sortie.campus = :idcampus')->setParameter('idcampus',$idCampus);
-        if (isset($nom) && !empty($nom)){
-            $queryBuilder->andWhere("sortie.nom LIKE :pnom")->setParameter('pnom','%'.$nom.'%');
+//        $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
+//        $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
+        $queryBuilder->join('sortie.campus','campus')->addSelect('campus');
+        $queryBuilder->join('sortie.etat', 'etat')->addSelect('etat');
+
+        //reduce by Campus
+        if (isset($campus)) {
+            $queryBuilder->andWhere('sortie.campus = :campus')->setParameter('campus', $campus);
         }
-        if(isset($dateDebut) && !empty($dateDebut)){
+
+        //reduce by user string in the sortie name
+        if (isset($nom) && !empty($nom)) {
+            $queryBuilder->andWhere("sortie.nom LIKE :pnom")->setParameter('pnom', '%' . $nom . '%');
+        }
+
+        //reduce by date
+        if (isset($dateDebut) && isset($dateFin)) {
             $queryBuilder->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
-                ->setParameter('dateDebut',$dateDebut)
-                ->setParameter('dateFin',$dateFin);
+                ->setParameter('dateDebut', $dateDebut)
+                ->setParameter('dateFin', $dateFin);
         }
-        if($isOrganisateur){
-            $queryBuilder->andWhere('sortie.organisateur = :user')->setParameter('user',$participant->getId());
+
+        //reduce to sortie which the user is organisateur
+        if ($isOrganisateur) {
+            $queryBuilder->andWhere('sortie.organisateur = :orga')->setParameter('orga', $participant->getId());
         }
 
         //when the 2 options isInscrit and notInscrit are checked, the result contains all result
-        if ($isInscrit XOR $notInscrit) {
+        if ($isInscrit xor $notInscrit) {
             $queryBuilder->join('sortie.assosPartiSort', 'assos')->addSelect('assos');
             $queryBuilder->join('assos.participant', 'participant')->addSelect('participant');
 
@@ -63,21 +98,32 @@ class SortieRepository extends ServiceEntityRepository
             }
         }
 
-        if($passees){
+        //reduce by old sorties
+        if ($passees) {
             $queryBuilder->andWhere("CURRENT_DATE() > DATE_ADD(sortie.dateHeureDebut, sortie.duree, 'minute')");
         }
 
+
+
         //remove sorties historisées
-        $queryBuilder->join('sortie.etat','etat')->addSelect('etat');
-        $queryBuilder->andWhere('etat.id != 7');
+        //$queryBuilder->join('sortie.etat', 'etat')->addSelect('etat');
+        $queryBuilder->andWhere('etat != 7');
+        //remove sorties en creation from the other users
+//doesn't work so see below
+//       $queryBuilder->andWhere('(etat != 1) and (sortie.organisateur != :userorga)')->setParameter('userorga', $participant->getId());
 
         //order by dateHeureSortie
         $queryBuilder->orderBy('sortie.dateHeureDebut');
 
-
-
         $query = $queryBuilder->getQuery();
         $result = $query->getResult();
+
+        //remove sorties en creation from the other users
+        foreach ($result as $key => $value){
+            if(($value->getOrganisateur() != $participant) && ($value->getEtat()->getId() == 1)){
+                unset($result[$key]);
+            }
+        }
 
         return $result;
     }
